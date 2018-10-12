@@ -68,7 +68,7 @@ module.exports = class ABI {
             codegen.method(
               `get ${name}`,
               [],
-              codegen.simpleType(input.get('type')),
+              codegen.ethereumType(input.get('type')),
               `
             return ${codegen.ethereumValueToCoercion(
               `this._event.parameters[${index}].value`,
@@ -111,7 +111,7 @@ module.exports = class ABI {
     klass.addMethod(
       codegen.staticMethod(
         'bind',
-        immutable.List([codegen.param('address', codegen.simpleType('address'))]),
+        immutable.List([codegen.param('address', codegen.ethereumType('address'))]),
         codegen.namedType(this.name),
         `
         return new ${this.name}('${this.name}', address);
@@ -147,7 +147,7 @@ module.exports = class ABI {
                     .map((output, index) =>
                       codegen.param(
                         `value${index}`,
-                        codegen.simpleType(output.get('type'))
+                        codegen.ethereumType(output.get('type'))
                       )
                     ),
                   null,
@@ -187,7 +187,7 @@ module.exports = class ABI {
                 .map((output, index) =>
                   codegen.klassMember(
                     `value${index}`,
-                    codegen.simpleType(output.get('type'))
+                    codegen.ethereumType(output.get('type'))
                   )
                 )
                 .forEach(member => returnType.addMember(member))
@@ -195,7 +195,7 @@ module.exports = class ABI {
               // Add the type to the types we'll create
               types = types.push(returnType)
             } else {
-              returnType = codegen.simpleType(
+              returnType = codegen.ethereumType(
                 member
                   .get('outputs')
                   .get(0)
@@ -213,7 +213,7 @@ module.exports = class ABI {
                   .map((input, index) =>
                     codegen.param(
                       paramName(input.get('name'), index),
-                      codegen.simpleType(input.get('type'))
+                      codegen.ethereumType(input.get('type'))
                     )
                   ),
                 codegen.namedType(returnType.name),

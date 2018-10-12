@@ -14,32 +14,24 @@ const GRAPHQL_TYPE_TO_ASSEMBLY_SCRIPT_TYPE_CONVERTERS = {
   NonNullType: (schema, gqlType) => {
     let inner = gqlType.get('type')
     let innerAsc = graphqlTypeToAssemblyScriptType(schema, inner)
-    return unionType(innerAsc, namedType('null'))
+    return innerAsc instanceof NullableType ? innerAsc.inner : innerAsc
   },
 
   ListType: (schema, gqlType) => {
     let inner = gqlType.get('type')
     let innerAsc = graphqlTypeToAssemblyScriptType(schema, inner)
-    return arrayType(innerAsc)
+    return nullableType(arrayType(innerAsc))
   },
 
-  NamedType: (schema, gqlType) => {
-    let name = gqlType.getIn(['name', 'value'])
-    console.log('NAME', name)
-    let ascType = graphqlTypeToAssemblyScriptType(
-      schema,
-      gqlType.getIn(['name', 'value'])
-    )
-    console.log('ASC TYPE', ascType)
-    return ascType
-  },
+  NamedType: (schema, gqlType) =>
+    graphqlTypeToAssemblyScriptType(schema, gqlType.getIn(['name', 'value'])),
 
-  String: () => namedType('string'),
-  ID: () => namedType('string'),
-  Bytes: () => namedType('Bytes'),
-  BigInt: () => namedType('U256'),
-  Int: () => namedType('u32'),
-  Boolean: () => namedType('boolean'),
+  String: () => nullableType(namedType('string')),
+  ID: () => nullableType(namedType('string')),
+  Bytes: () => nullableType(namedType('Bytes')),
+  BigInt: () => nullableType(namedType('U256')),
+  Int: () => nullableType(namedType('u32')),
+  Boolean: () => nullableType(namedType('boolean')),
 }
 
 const graphqlTypeToAssemblyScriptType = (schema, gqlType) => {
@@ -138,8 +130,18 @@ const ETHEREUM_VALUE_TO_TYPE_FUNCTION_MAP = {
 
 const VALUE_TO_TYPE_FUNCTION_MAP = {
   string: 'toString',
-  BigInt: 'toU265',
   Bytes: 'toBytes',
+  U256: 'toU256',
+  u32: 'toU32',
+  boolean: 'toBoolean',
+}
+
+const VALUE_FROM_TYPE_FUNCTION_MAP = {
+  string: 'fromString',
+  Bytes: 'fromBytes',
+  U256: 'fromU256',
+  u32: 'fromU32',
+  boolean: 'fromBoolean',
 }
 
 const findMatch = (m, type) => {
@@ -157,22 +159,13 @@ const maybeInspectArray = type => {
   }
 }
 
-const typeToString = type => {
-  console.log('Type to string:', type, type instanceof UnionType)
-
-  if (type instanceof UnionType) {
-    return type.types.map(type => typeToString(type)).join(' | ')
-  } else if (type instanceof NamedType) {
-    return type.toString()
+const ethereumTypeToString = type => {
+  let [isArray, innerType] = maybeInspectArray(type)
+  let ascType = TYPE_MAP[innerType] || findMatch(TYPE_MAP, innerType)
+  if (ascType !== undefined) {
+    return isArray ? `Array<${ascType}>` : ascType
   } else {
-    let [isArray, innerType] = maybeInspectArray(type)
-    let tsType = TYPE_MAP[innerType] || findMatch(TYPE_MAP, innerType)
-
-    if (tsType !== undefined) {
-      return isArray ? `Array<${tsType}>` : tsType
-    } else {
-      throw `Unsupported type: ${type}`
-    }
+    throw `Unsupported Ethereum type: ${type}`
   }
 }
 
@@ -202,30 +195,28 @@ const ethereumValueToTypeFunction = type => {
 }
 
 const valueToTypeFunction = type => {
-  console.log('VALUE TO TYPE FUNCTION:', type)
-  let fn =
-    type instanceof ArrayType
-      ? `${valueToTypeFunction(type.inner)}Array`
-      : type instanceof UnionType
-        ? `${valueToTypeFunction(type.types[0])}`
-        : VALUE_TO_TYPE_FUNCTION_MAP[type.name] || undefined
-  console.log('FN:', fn)
-  return fn
-  //typeof type === 'ArrayType'
-  //  ? `${valueToTypeFunction(type.inner)}Array`
-  //  : VALUE_TO_TYPE_FUNCTION_MAP[type.name] || undefined
+  if (type instanceof ArrayType) {
+    return `${valueToTypeFunction(type.inner)}Array`
+  } else if (type instanceof NullableType) {
+    return valueToTypeFunction(type.inner)
+  } else if (VALUE_TO_TYPE_FUNCTION_MAP[type.name]) {
+    return VALUE_TO_TYPE_FUNCTION_MAP[type.name]
+  } else {
+    throw new Error(`No conversion from Value to ${type}`)
+  }
 }
 
-//let [isArray, innerType] = maybeInspectArray(type)
-//let toFunction =
-//  VALUE_TO_TYPE_FUNCTION_MAP[innerType] ||
-//  findMatch(VALUE_TO_TYPE_FUNCTION_MAP, innerType)
-
-//if (toFunction !== undefined) {
-//  return isArray ? `${toFunction}Array` : toFunction
-//} else {
-//  throw `Unsupported Value to type coercion for type: ${type}`
-//}
+const valueFromTypeFunction = type => {
+  if (type instanceof ArrayType) {
+    return `${valueFromTypeFunction(type.inner)}Array`
+  } else if (type instanceof NullableType) {
+    return valueFromTypeFunction(type.inner)
+  } else if (VALUE_FROM_TYPE_FUNCTION_MAP[type.name]) {
+    return VALUE_FROM_TYPE_FUNCTION_MAP[type.name]
+  } else {
+    throw new Error(`No conversion from ${type} to Value`)
+  }
+}
 
 class Param {
   constructor(name, type) {
@@ -245,7 +236,7 @@ class ReturnType {
   }
 
   toString() {
-    return `${typeToString(this.type)}`
+    return `${this.type.toString()}`
   }
 }
 
@@ -275,7 +266,7 @@ class Method {
   constructor(name, params, returnType, body) {
     this.name = name
     this.params = params || []
-    this.returnType = returnType || namedType('void')
+    this.returnType = returnType
     this.body = body || ''
   }
 
@@ -357,9 +348,9 @@ class NamedType {
   }
 }
 
-class SimpleType {
+class EthereumType {
   constructor(name) {
-    this.name = typeToString(name)
+    this.name = ethereumTypeToString(name)
   }
 
   toString() {
@@ -370,11 +361,21 @@ class SimpleType {
 class ArrayType {
   constructor(inner) {
     this.inner = inner
-    this.name = `Array<${typeToString(inner)}>`
+    this.name = `Array<${inner.toString()}>`
   }
 
   toString() {
     return this.name
+  }
+}
+
+class NullableType {
+  constructor(inner) {
+    this.inner = inner
+  }
+
+  toString() {
+    return `${this.inner.toString()} | null`
   }
 }
 
@@ -384,7 +385,7 @@ class UnionType {
   }
 
   toString() {
-    return this.types.map(t => t.name).join(' | ')
+    return this.types.map(t => t.toString()).join(' | ')
   }
 }
 
@@ -429,13 +430,23 @@ class ValueToCoercion {
   }
 
   toString() {
-    console.log('VALUE TO COERCION:', this.expr, this.type)
     return `${this.expr}.${valueToTypeFunction(this.type)}()`
   }
 }
 
+class ValueFromCoercion {
+  constructor(expr, type) {
+    this.expr = expr
+    this.type = type
+  }
+
+  toString() {
+    return `Value.${valueFromTypeFunction(this.type)}(${this.expr})`
+  }
+}
+
 const namedType = name => new NamedType(name)
-const simpleType = name => new SimpleType(name)
+const ethereumType = name => new EthereumType(name)
 const arrayType = name => new ArrayType(name)
 const param = (name, type) => new Param(name, type)
 const method = (name, params, returnType, body) =>
@@ -448,12 +459,19 @@ const ethereumValueFromCoercion = (expr, type) =>
   new EthereumValueFromCoercion(expr, type)
 const ethereumValueToCoercion = (expr, type) => new EthereumValueToCoercion(expr, type)
 const unionType = (...types) => new UnionType(types)
+const nullableType = type => new NullableType(type)
 const moduleImports = (nameOrNames, module) => new ModuleImports(nameOrNames, module)
 const valueToCoercion = (expr, type) => new ValueToCoercion(expr, type)
+const valueFromCoercion = (expr, type) => new ValueFromCoercion(expr, type)
 
 module.exports = {
+  // Types
+  NullableType,
+  ArrayType,
+
+  // Code generators
   namedType,
-  simpleType,
+  ethereumType,
   arrayType,
   klass,
   klassMember,
@@ -462,8 +480,10 @@ module.exports = {
   param,
   ethereumValueFromCoercion,
   ethereumValueToCoercion,
+  nullableType,
   unionType,
   moduleImports,
   valueToCoercion,
+  valueFromCoercion,
   graphqlTypeToAssemblyScriptType,
 }
