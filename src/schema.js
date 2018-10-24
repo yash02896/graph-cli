@@ -2,7 +2,7 @@ let fs = require('fs-extra')
 let graphql = require('graphql/language')
 let immutable = require('immutable')
 
-let codegen = require('./codegen')
+let codegen = require('./codegen/typescript')
 
 module.exports = class Schema {
   constructor(filename, document, ast) {
