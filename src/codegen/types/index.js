@@ -1,102 +1,95 @@
+const immutable = require('immutable')
+
 const TYPE_CONVERSIONS = require('./conversions')
 
-/**
- * Looks up conversion details to convert a typed value from one domain
- * to typed value in another domain.
- */
-const conversionInfo = (fromDomain, toDomain, fromType, toType) => {
-  let conversion = TYPE_CONVERSIONS.find(
+// Conversion utilities
+
+const conversionsForTypeSystems = (fromTypeSystem, toTypeSystem) => {
+  let conversions = TYPE_CONVERSIONS.getIn([fromTypeSystem, toTypeSystem])
+  if (conversions === undefined) {
+    throw new Error(
+      `Conversions from '${fromTypeSystem}' to '${toTypeSystem}' are not supported`
+    )
+  }
+  return conversions
+}
+
+const objectifyConversion = (fromTypeSystem, toTypeSystem, conversion) => {
+  return immutable.fromJS({
+    from: {
+      typeSystem: fromTypeSystem,
+      type: conversion.get(0),
+    },
+    to: {
+      typeSystem: toTypeSystem,
+      type: conversion.get(1),
+    },
+    convert: conversion.get(2),
+  })
+}
+
+const findConversionFromType = (fromTypeSystem, toTypeSystem, fromType) => {
+  let conversions = conversionsForTypeSystems(fromTypeSystem, toTypeSystem)
+
+  let conversion = conversions.find(
     conversion =>
-      conversion[0] === fromDomain &&
-      conversion[1] === toDomain &&
-      (fromType !== undefined
-        ? fromType.match(conversion[2])
-        : toType !== undefined
-          ? toType.match(conversion[3])
-          : false)
+      typeof conversion.get(0) === 'string'
+        ? conversion.get(0) === fromType
+        : fromType.match(conversion.get(0))
   )
 
   if (conversion === undefined) {
-    if (fromType !== undefined) {
-      throw new Error(
-        `${fromDomain} -> ${toDomain} conversion from type '${fromType}' not supported`
-      )
-    } else {
-      throw new Error(
-        `${fromDomain} -> ${toDomain} conversion to type '${toType}' not supported`
-      )
-    }
+    throw new Error(
+      `Conversion from '${fromTypeSystem}' to '${toTypeSystem}' for ` +
+        `source type '${fromType}' is not supported`
+    )
   }
 
-  return {
-    fromDomain: conversion[0],
-    toDomain: conversion[1],
-    fromType: conversion[2],
-    toType: conversion[3],
-    toInstanceMethod: conversion[4],
-    toStaticMethod: conversion.length > 5 ? conversion[5] : undefined,
-    fromInstanceMethod: conversion.length > 6 ? conversion[6] : undefined,
-    fromStaticMethod: conversion.length > 7 ? conversion[7] : undefined,
+  return objectifyConversion(fromTypeSystem, toTypeSystem, conversion)
+}
+
+const findConversionToType = (fromTypeSystem, toTypeSystem, toType) => {
+  let conversions = conversionsForTypeSystems(fromTypeSystem, toTypeSystem)
+
+  let conversion = conversions.find(
+    conversion =>
+      typeof conversion.get(1) === 'string'
+        ? conversion.get(1) === toType
+        : toType.match(conversion.get(1))
+  )
+
+  if (conversion === undefined) {
+    throw new Error(
+      `Conversion from '${fromTypeSystem}' to '${toTypeSystem}' for ` +
+        `target type '${toType}' is not supported`
+    )
   }
+
+  return objectifyConversion(fromTypeSystem, toTypeSystem, conversion)
 }
 
-/**
- * Generates code that converts a typed value from one domain into a
- * typed value in another domain.
- */
-const convertFromType = (fromDomain, toDomain, fromType, code) => {
-  let conversion = conversionInfo(fromDomain, toDomain, fromType, undefined)
+// High-level type system API
 
-  console.log('CONVERT FROM TYPE', fromDomain, toDomain, fromType)
-  console.log('CONVERSION:', conversion)
+const ascTypeForEthereum = ethereumType =>
+  findConversionFromType('EthereumValue', 'AssemblyScript', ethereumType).getIn([
+    'to',
+    'type',
+  ])
 
-  return conversion.toStaticMethod !== undefined
-    ? `${conversion.toDomain}.${conversion.toStaticMethod}(${code})`
-    : `${code}.${conversion.toInstanceMethod}()`
-}
+const ethereumTypeForAsc = ascType =>
+  findConversionFromType('AssemblyScript', 'EthereumValue', ascType).getIn(['to', 'type'])
 
-/**
- * Generates code that converts a typed value from one domain into a
- * typed value in another domain.
- */
-const convertToType = (fromDomain, toDomain, toType, code) => {
-  let conversion = conversionInfo(fromDomain, toDomain, undefined, toType)
+const ethereumValueToAsc = (code, ethereumType) =>
+  findConversionFromType('EthereumValue', 'AssemblyScript', ethereumType).get('convert')(
+    code
+  )
 
-  return conversion.fromStaticMethod !== undefined
-    ? `${conversion.toDomain}.${conversion.fromStaticMethod}(${code})`
-    : `${code}.${conversion.fromInstanceMethod}()`
-}
-
-/**
- * Given two domains and a type, returns the corresponding type in
- * the other domain.
- */
-const typeFor = (fromDomain, toDomain, fromType) =>
-  conversionInfo(fromDomain, toDomain, fromType).toType
-
-// Helpers
-
-const ethereumToAsc = (fromType, code) =>
-  convertFromType('EthereumValue', 'AssemblyScript', fromType, code)
-
-const ascToEthereum = (toType, code) =>
-  convertToType('EthereumValue', 'AssemblyScript', toType, code)
-
-const valueToAsc = (fromType, code) =>
-  convertFromType('Value', 'AssemblyScript', fromType, code)
-
-const ascToValue = (fromType, code) =>
-  convertToType('Value', 'AssemblyScript', fromType, code)
-
-const ascTypeFromEthereum = fromType =>
-  conversionInfo('EthereumValue', 'AssemblyScript', fromType).toType
+const ascValueToEthereum = (code, ascType) =>
+  findConversionToType('AssemblyScript', 'EthereumValue', ascType).get('convert')(code)
 
 module.exports = {
-  ethereumToAsc,
-  ascToEthereum,
-  valueToAsc,
-  ascToValue,
-  conversionInfo,
-  typeFor,
-  ascTypeFromEthereum,
+  ascTypeForEthereum,
+  ethereumTypeForAsc,
+  ethereumValueToAsc,
+  ascValueToEthereum,
 }
