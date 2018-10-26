@@ -77,7 +77,7 @@ module.exports = class SchemaCodeGenerator {
       `
       let value = this.get('${name}')
       if (value === null) {
-        return null
+        return ${returnType.toString() === 'boolean' ? 'false' : 'null'}
       } else {
         return ${typesCodegen.valueToAsc(
           'value',
