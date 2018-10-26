@@ -19,7 +19,7 @@ const ETHEREUM_VALUE_TO_ASSEMBLYSCRIPT = [
     'BigInt',
     code => `${code}.toBigInt()`,
   ],
-  ['string', 'String', code => `${code}.toString()`],
+  ['string', 'string', code => `${code}.toString()`],
   [/address\[([0-9]+)?\]/, 'Array<Address>', code => `${code}.toAddressArray()`],
   //[/bool\[([0-9]+)?\]/, 'Array<boolean>', code => `${code}.toBooleanArray()`],
   //[/byte\[([0-9]+)?\]/, 'Array<Bytes>', 'toBytesArray'],
@@ -50,10 +50,15 @@ const ASSEMBLYSCRIPT_TO_ETHEREUM_VALUE = [
   ['u32', /^uint(8|16|24|32)$/, code => `EthereumValue.fromU32(${code})`],
   [
     'BigInt',
-    /u?int(40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)/,
-    code => `EthereumValue.fromBigInt(${code})`,
+    /int(40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)/,
+    code => `EthereumValue.fromBigIntSigned(${code})`,
   ],
-  ['String', 'string', code => `EthereumValue.fromString(${code})`],
+  [
+    'BigInt',
+    /uint(40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)/,
+    code => `EthereumValue.fromBigIntUnsigned(${code})`,
+  ],
+  ['string', 'string', code => `EthereumValue.fromString(${code})`],
 
   // TODO: arrays
 ]
@@ -67,18 +72,18 @@ const VALUE_TO_ASSEMBLYSCRIPT = [
   ['[Int]', 'Array<i32>', code => `${code}.toI32Array()`],
   ['[Int]', 'Array<u32>', code => `${code}.toU32Array()`],
   ['[BigInt]', 'Array<BigInt>', code => `${code}.toBigIntArray()`],
-  ['[ID]', 'Array<String>', code => `${code}.toStringArray()`],
-  ['[String]', 'Array<String>', code => `${code}.toStringArray()`],
-  [/\[.*\]/, 'Array<String>', code => `${code}.toStringArray()`],
+  ['[ID]', 'Array<string>', code => `${code}.toStringArray()`],
+  ['[String]', 'Array<string>', code => `${code}.toStringArray()`],
+  [/\[.*\]/, 'Array<string>', code => `${code}.toStringArray()`],
 
   ['Bytes', 'Bytes', code => `${code}.toBytes()`],
   ['Boolean', 'boolean', code => `${code}.toBoolean()`],
   ['Int', 'i32', code => `${code}.toI32()`],
   ['Int', 'u32', code => `${code}.toU32()`],
   ['BigInt', 'BigInt', code => `${code}.toBigInt()`],
-  ['ID', 'String', code => `${code}.toString()`],
-  ['String', 'String', code => `${code}.toString()`],
-  [/.*/, 'String', code => `${code}.toString()`],
+  ['ID', 'string', code => `${code}.toString()`],
+  ['String', 'string', code => `${code}.toString()`],
+  [/.*/, 'string', code => `${code}.toString()`],
 ]
 
 /**
@@ -90,18 +95,18 @@ const ASSEMBLYSCRIPT_TO_VALUE = [
   ['Array<i32>', '[Int]', code => `Value.fromI32Array(${code})`],
   ['Array<u32>', '[Int]', code => `Value.fromU32Array(${code})`],
   ['Array<BigInt>', '[BigInt]', code => `Value.fromBigIntArray(${code})`],
-  ['Array<String>', '[ID]', code => `Value.fromStringArray(${code})`],
-  ['Array<String>', '[String]', code => `Value.fromStringArray(${code})`],
-  ['Array<String>', /\[.*\]/, code => `Value.fromStringArray(${code})`],
+  ['Array<string>', '[ID]', code => `Value.fromStringArray(${code})`],
+  ['Array<string>', '[String]', code => `Value.fromStringArray(${code})`],
+  ['Array<string>', /\[.*\]/, code => `Value.fromStringArray(${code})`],
 
   ['Bytes', 'Bytes', code => `Value.fromBytes(${code})`],
   ['boolean', 'Boolean', code => `Value.fromBoolean(${code})`],
   ['i32', 'Int', code => `Value.fromI32(${code})`],
   ['u32', 'Int', code => `Value.fromI32(${code})`],
   ['BigInt', 'BigInt', code => `Value.fromBigInt(${code})`],
-  ['String', 'ID', code => `Value.fromString(${code})`],
-  ['String', 'String', code => `Value.fromString(${code})`],
-  ['String', /.*/, code => `Value.fromString(${code})`],
+  ['string', 'ID', code => `Value.fromString(${code})`],
+  ['string', 'String', code => `Value.fromString(${code})`],
+  ['string', /.*/, code => `Value.fromString(${code})`],
 ]
 
 /**
