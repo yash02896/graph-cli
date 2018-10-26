@@ -166,7 +166,7 @@ module.exports = class AbiCodeGenerator {
                     .get('outputs')
                     .map(
                       (output, index) =>
-                        `map.set('value${index}', ${typesCodegen.ascValueToEthereum(
+                        `map.set('value${index}', ${typesCodegen.ethereumValueFromAsc(
                           `this.value${index}`,
                           output.get('type')
                         )})`
@@ -225,7 +225,7 @@ module.exports = class AbiCodeGenerator {
                       ? member
                           .get('inputs')
                           .map((input, index) =>
-                            typesCodegen.ascValueToEthereum(
+                            typesCodegen.ethereumValueFromAsc(
                               paramName(input.get('name'), index),
                               input.get('type')
                             )
