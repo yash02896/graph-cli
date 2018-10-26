@@ -84,12 +84,29 @@ const ethereumValueToAsc = (code, ethereumType) =>
     code
   )
 
-const ascValueToEthereum = (code, ascType) =>
-  findConversionToType('AssemblyScript', 'EthereumValue', ascType).get('convert')(code)
+const ethereumValueFromAsc = (code, ethereumType) =>
+  findConversionToType('AssemblyScript', 'EthereumValue', ethereumType).get('convert')(
+    code
+  )
+
+const ascTypeForValue = valueType =>
+  findConversionFromType('Value', 'AssemblyScript', valueType).getIn(['to', 'type'])
+
+const valueToAsc = (code, valueType) =>
+  findConversionFromType('Value', 'AssemblyScript', valueType).get('convert')(code)
+
+const valueFromAsc = (code, valueType) =>
+  findConversionToType('AssemblyScript', 'Value', valueType).get('convert')(code)
 
 module.exports = {
+  // EthereumValue <-> AssemblyScript
   ascTypeForEthereum,
   ethereumTypeForAsc,
   ethereumValueToAsc,
-  ascValueToEthereum,
+  ethereumValueFromAsc,
+
+  // Value <-> AssemblyScript
+  ascTypeForValue,
+  valueToAsc,
+  valueFromAsc,
 }

@@ -37,9 +37,9 @@ const ETHEREUM_VALUE_TO_ASSEMBLYSCRIPT = [
 /**
  * AssemblyScript -> EthereumValue conversions
  */
-const ASSEMBLY_SCRIPT_TO_ETHEREUM_VALUE = [
+const ASSEMBLYSCRIPT_TO_ETHEREUM_VALUE = [
   ['Address', 'address', code => `EthereumValue.fromAddress(${code})`],
-  ['boolean', 'bool', code => `EthereumValue.fromBool(${code})`],
+  ['boolean', 'bool', code => `EthereumValue.fromBoolean(${code})`],
   ['Bytes', 'byte', code => `EthereumValue.fromBytes(${code})`],
   [
     'Bytes',
@@ -54,6 +54,54 @@ const ASSEMBLY_SCRIPT_TO_ETHEREUM_VALUE = [
     code => `EthereumValue.fromBigInt(${code})`,
   ],
   ['String', 'string', code => `EthereumValue.fromString(${code})`],
+
+  // TODO: arrays
+]
+
+/**
+ * Value -> AssemblyScript conversions
+ */
+const VALUE_TO_ASSEMBLYSCRIPT = [
+  ['[Bytes]', 'Array<Bytes>', code => `${code}.toBytesArray()`],
+  ['[Boolean]', 'Array<boolean>', code => `${code}.toBooleanArray()`],
+  ['[Int]', 'Array<i32>', code => `${code}.toI32Array()`],
+  ['[Int]', 'Array<u32>', code => `${code}.toU32Array()`],
+  ['[BigInt]', 'Array<BigInt>', code => `${code}.toBigIntArray()`],
+  ['[ID]', 'Array<String>', code => `${code}.toStringArray()`],
+  ['[String]', 'Array<String>', code => `${code}.toStringArray()`],
+  [/\[.*\]/, 'Array<String>', code => `${code}.toStringArray()`],
+
+  ['Bytes', 'Bytes', code => `${code}.toBytes()`],
+  ['Boolean', 'boolean', code => `${code}.toBoolean()`],
+  ['Int', 'i32', code => `${code}.toI32()`],
+  ['Int', 'u32', code => `${code}.toU32()`],
+  ['BigInt', 'BigInt', code => `${code}.toBigInt()`],
+  ['ID', 'String', code => `${code}.toString()`],
+  ['String', 'String', code => `${code}.toString()`],
+  [/.*/, 'String', code => `${code}.toString()`],
+]
+
+/**
+ * AssemblyScript -> Value conversions
+ */
+const ASSEMBLYSCRIPT_TO_VALUE = [
+  ['Array<Bytes>', '[Bytes]', code => `Value.fromBytesArray(${code})`],
+  ['Array<boolean>', '[Boolean]', code => `Value.fromBooleanArray(${code})`],
+  ['Array<i32>', '[Int]', code => `Value.fromI32Array(${code})`],
+  ['Array<u32>', '[Int]', code => `Value.fromU32Array(${code})`],
+  ['Array<BigInt>', '[BigInt]', code => `Value.fromBigIntArray(${code})`],
+  ['Array<String>', '[ID]', code => `Value.fromStringArray(${code})`],
+  ['Array<String>', '[String]', code => `Value.fromStringArray(${code})`],
+  ['Array<String>', /\[.*\]/, code => `Value.fromStringArray(${code})`],
+
+  ['Bytes', 'Bytes', code => `Value.fromBytes(${code})`],
+  ['boolean', 'Boolean', code => `Value.fromBoolean(${code})`],
+  ['i32', 'Int', code => `Value.fromI32(${code})`],
+  ['u32', 'Int', code => `Value.fromI32(${code})`],
+  ['BigInt', 'BigInt', code => `Value.fromBigInt(${code})`],
+  ['String', 'ID', code => `Value.fromString(${code})`],
+  ['String', 'String', code => `Value.fromString(${code})`],
+  ['String', /.*/, code => `Value.fromString(${code})`],
 ]
 
 /**
@@ -64,6 +112,10 @@ module.exports = immutable.fromJS({
     AssemblyScript: ETHEREUM_VALUE_TO_ASSEMBLYSCRIPT,
   },
   AssemblyScript: {
-    EthereumValue: ASSEMBLY_SCRIPT_TO_ETHEREUM_VALUE,
+    EthereumValue: ASSEMBLYSCRIPT_TO_ETHEREUM_VALUE,
+    Value: ASSEMBLYSCRIPT_TO_VALUE,
+  },
+  Value: {
+    AssemblyScript: VALUE_TO_ASSEMBLYSCRIPT,
   },
 })
