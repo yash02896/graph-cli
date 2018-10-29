@@ -99,10 +99,10 @@ describe('AssemblyScript -> EthereumValue', () => {
   test('BigInt -> (u)int40...256', () => {
     for (let i = 40; i <= 256; i += 8) {
       expect(codegen.ethereumValueFromAsc('x', `int${i}`)).toBe(
-        `EthereumValue.fromBigInt(x)`
+        `EthereumValue.fromBigIntSigned(x)`
       )
       expect(codegen.ethereumValueFromAsc('x', `uint${i}`)).toBe(
-        `EthereumValue.fromBigInt(x)`
+        `EthereumValue.fromBigIntUnsigned(x)`
       )
     }
   })
