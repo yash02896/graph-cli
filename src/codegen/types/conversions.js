@@ -4,6 +4,8 @@ const immutable = require('immutable')
  * EthereumValue -> AssemblyScript conversions
  */
 const ETHEREUM_VALUE_TO_ASSEMBLYSCRIPT = [
+  // Scalar values
+
   ['address', 'Address', code => `${code}.toAddress()`],
   ['bool', 'boolean', code => `${code}.toBoolean()`],
   ['byte', 'Bytes', code => `${code}.toBytes()`],
@@ -20,6 +22,9 @@ const ETHEREUM_VALUE_TO_ASSEMBLYSCRIPT = [
     code => `${code}.toBigInt()`,
   ],
   ['string', 'string', code => `${code}.toString()`],
+
+  // Arrays
+
   [/^address\[([0-9]+)?\]$/, 'Array<Address>', code => `${code}.toAddressArray()`],
   [/^bool\[([0-9]+)?\]$/, 'Array<boolean>', code => `${code}.toBooleanArray()`],
   [/^byte\[([0-9]+)?\]$/, 'Array<Bytes>', code => `${code}.toBytesArray()`],
@@ -42,6 +47,8 @@ const ETHEREUM_VALUE_TO_ASSEMBLYSCRIPT = [
  * AssemblyScript -> EthereumValue conversions
  */
 const ASSEMBLYSCRIPT_TO_ETHEREUM_VALUE = [
+  // Scalar values
+
   ['Address', 'address', code => `EthereumValue.fromAddress(${code})`],
   ['boolean', 'bool', code => `EthereumValue.fromBoolean(${code})`],
   ['Bytes', 'byte', code => `EthereumValue.fromBytes(${code})`],
@@ -64,7 +71,8 @@ const ASSEMBLYSCRIPT_TO_ETHEREUM_VALUE = [
   ],
   ['string', 'string', code => `EthereumValue.fromString(${code})`],
 
-  // TODO: arrays
+  // Arrays
+
   [
     'Array<Address>',
     /^address\[([0-9]+)?\]$/,
@@ -116,6 +124,8 @@ const ASSEMBLYSCRIPT_TO_ETHEREUM_VALUE = [
  * Value -> AssemblyScript conversions
  */
 const VALUE_TO_ASSEMBLYSCRIPT = [
+  // Arrays
+
   ['[Bytes]', 'Array<Bytes>', code => `${code}.toBytesArray()`],
   ['[Boolean]', 'Array<boolean>', code => `${code}.toBooleanArray()`],
   ['[Int]', 'Array<i32>', code => `${code}.toI32Array()`],
@@ -124,6 +134,8 @@ const VALUE_TO_ASSEMBLYSCRIPT = [
   ['[ID]', 'Array<string>', code => `${code}.toStringArray()`],
   ['[String]', 'Array<string>', code => `${code}.toStringArray()`],
   [/\[.*\]/, 'Array<string>', code => `${code}.toStringArray()`],
+
+  // Scalar values
 
   ['Bytes', 'Bytes', code => `${code}.toBytes()`],
   ['Boolean', 'boolean', code => `${code}.toBoolean()`],
@@ -139,6 +151,8 @@ const VALUE_TO_ASSEMBLYSCRIPT = [
  * AssemblyScript -> Value conversions
  */
 const ASSEMBLYSCRIPT_TO_VALUE = [
+  // Arrays
+
   ['Array<Bytes>', '[Bytes]', code => `Value.fromBytesArray(${code})`],
   ['Array<boolean>', '[Boolean]', code => `Value.fromBooleanArray(${code})`],
   ['Array<i32>', '[Int]', code => `Value.fromI32Array(${code})`],
@@ -147,6 +161,8 @@ const ASSEMBLYSCRIPT_TO_VALUE = [
   ['Array<string>', '[ID]', code => `Value.fromStringArray(${code})`],
   ['Array<string>', '[String]', code => `Value.fromStringArray(${code})`],
   ['Array<string>', /\[.*\]/, code => `Value.fromStringArray(${code})`],
+
+  // Scalar values
 
   ['Bytes', 'Bytes', code => `Value.fromBytes(${code})`],
   ['boolean', 'Boolean', code => `Value.fromBoolean(${code})`],
