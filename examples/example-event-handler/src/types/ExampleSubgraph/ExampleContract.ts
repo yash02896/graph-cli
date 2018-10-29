@@ -500,4 +500,494 @@ export class ExampleContract extends SmartContract {
     ]);
     return result[0].toBigInt();
   }
+
+  getAndReturnAddressArray(x: Array<Address>): Array<Address> {
+    let result = super.call("getAndReturnAddressArray", [
+      EthereumValue.fromAddressArray(x)
+    ]);
+    return result[0].toAddressArray();
+  }
+
+  getAndReturnStringArray(x: Array<String>): Array<String> {
+    let result = super.call("getAndReturnStringArray", [
+      EthereumValue.fromStringArray(x)
+    ]);
+    return result[0].toStringArray();
+  }
+
+  getAndReturnBoolArray(x: Array<boolean>): Array<boolean> {
+    let result = super.call("getAndReturnBoolArray", [
+      EthereumValue.fromBooleanArray(x)
+    ]);
+    return result[0].toBooleanArray();
+  }
+
+  getAndReturnByteArray(x: Array<Bytes>): Array<Bytes> {
+    let result = super.call("getAndReturnByteArray", [
+      EthereumValue.fromBytesArray(x)
+    ]);
+    return result[0].toBytesArray();
+  }
+
+  getAndReturnBytes1Array(x: Array<Bytes>): Array<Bytes> {
+    let result = super.call("getAndReturnBytes1Array", [
+      EthereumValue.fromBytesArray(x)
+    ]);
+    return result[0].toBytesArray();
+  }
+
+  getAndReturnBytes32Array(x: Array<Bytes>): Array<Bytes> {
+    let result = super.call("getAndReturnBytes32Array", [
+      EthereumValue.fromBytesArray(x)
+    ]);
+    return result[0].toBytesArray();
+  }
+
+  getAndReturnInt8Array(x: Array<i32>): Array<i32> {
+    let result = super.call("getAndReturnInt8Array", [
+      EthereumValue.fromI32Array(x)
+    ]);
+    return result[0].toI32Array();
+  }
+
+  getAndReturnInt16Array(x: Array<i32>): Array<i32> {
+    let result = super.call("getAndReturnInt16Array", [
+      EthereumValue.fromI32Array(x)
+    ]);
+    return result[0].toI32Array();
+  }
+
+  getAndReturnInt24Array(x: Array<i32>): Array<i32> {
+    let result = super.call("getAndReturnInt24Array", [
+      EthereumValue.fromI32Array(x)
+    ]);
+    return result[0].toI32Array();
+  }
+
+  getAndReturnInt32Array(x: Array<i32>): Array<i32> {
+    let result = super.call("getAndReturnInt32Array", [
+      EthereumValue.fromI32Array(x)
+    ]);
+    return result[0].toI32Array();
+  }
+
+  getAndReturnInt40Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt40Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt48Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt48Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt56Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt56Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt64Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt64Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt72Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt72Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt80Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt80Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt88Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt88Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt96Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt96Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt104Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt104Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt112Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt112Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt120Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt120Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt128Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt128Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt136Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt136Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt144Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt144Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt152Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt152Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt160Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt160Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt168Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt168Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt176Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt176Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt184Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt184Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt192Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt192Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt200Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt200Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt208Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt208Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt216Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt216Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt224Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt224Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt232Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt232Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt240Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt240Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt248Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt248Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnInt256Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnInt256Array", [
+      EthereumValue.fromSignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint8Array(x: Array<u32>): Array<u32> {
+    let result = super.call("getAndReturnUint8Array", [
+      EthereumValue.fromU32Array(x)
+    ]);
+    return result[0].toU32Array();
+  }
+
+  getAndReturnUint16Array(x: Array<u32>): Array<u32> {
+    let result = super.call("getAndReturnUint16Array", [
+      EthereumValue.fromU32Array(x)
+    ]);
+    return result[0].toU32Array();
+  }
+
+  getAndReturnUint24Array(x: Array<u32>): Array<u32> {
+    let result = super.call("getAndReturnUint24Array", [
+      EthereumValue.fromU32Array(x)
+    ]);
+    return result[0].toU32Array();
+  }
+
+  getAndReturnUint32Array(x: Array<u32>): Array<u32> {
+    let result = super.call("getAndReturnUint32Array", [
+      EthereumValue.fromU32Array(x)
+    ]);
+    return result[0].toU32Array();
+  }
+
+  getAndReturnUint40Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint40Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint48Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint48Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint56Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint56Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint64Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint64Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint72Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint72Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint80Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint80Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint88Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint88Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint96Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint96Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint104Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint104Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint112Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint112Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint120Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint120Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint128Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint128Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint136Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint136Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint144Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint144Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint152Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint152Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint160Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint160Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint168Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint168Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint176Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint176Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint184Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint184Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint192Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint192Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint200Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint200Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint208Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint208Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint216Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint216Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint224Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint224Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint232Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint232Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint240Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint240Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint248Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint248Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
+
+  getAndReturnUint256Array(x: Array<BigInt>): Array<BigInt> {
+    let result = super.call("getAndReturnUint256Array", [
+      EthereumValue.fromUnsignedBigIntArray(x)
+    ]);
+    return result[0].toBigIntArray();
+  }
 }
