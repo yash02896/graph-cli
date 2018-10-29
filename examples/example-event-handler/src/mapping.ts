@@ -1,12 +1,14 @@
 import 'allocator/arena'
 export { allocate_memory }
 
-import { store, crypto, Entity, BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { ExampleEvent } from './types/ExampleSubgraph/ExampleContract'
+import { store, crypto, Entity, Address, BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { ExampleContract, ExampleEvent } from './types/ExampleSubgraph/ExampleContract'
 import { ExampleEntity } from './types/schema'
 
 export function handleExampleEvent(event: ExampleEvent): void {
   let entity = new ExampleEntity()
+
+  // Entity field access
 
   entity.optionalBoolean = true
   entity.optionalBoolean = false
@@ -95,6 +97,22 @@ export function handleExampleEvent(event: ExampleEvent): void {
   let requiredReference: string = entity.requiredReference
   let requiredReferenceList: Array<string> = entity.requiredReferenceList
 
+  // Smart contract calls
+
+  let contract = ExampleContract.bind(event.address)
+  entity.requiredBytes = contract.getAndReturnAddress(entity.requiredBytes as Address)
+  entity.requiredBoolean = contract.getAndReturnBool(entity.requiredBoolean)
+  entity.requiredBytes = contract.getAndReturnByte(entity.requiredBytes)
+  entity.requiredBytes = contract.getAndReturnBytes1(entity.requiredBytes)
+  entity.requiredBytes = contract.getAndReturnBytes32(entity.requiredBytes)
+  entity.requiredInt = contract.getAndReturnInt8(entity.requiredInt as i32)
+  entity.requiredInt = contract.getAndReturnInt16(entity.requiredInt as i32)
+  entity.requiredInt = contract.getAndReturnInt24(entity.requiredInt as i32)
+  entity.requiredInt = contract.getAndReturnInt32(entity.requiredInt as i32)
+
+  // Store access
+
   store.set('ExampleEntity', 'example id', entity)
   store.get('ExampleEntity', 'example id')
+  store.remove('ExampleEntity', 'example id')
 }

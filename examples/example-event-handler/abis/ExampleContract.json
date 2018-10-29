@@ -4,5 +4,209 @@
     "inputs": [{ "indexed": true, "name": "exampleParam", "type": "string" }],
     "name": "ExampleEvent",
     "type": "event"
+  },
+  {
+    "name": "getAndReturnAddress",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnBool",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "bool"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnByte",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "byte"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "byte"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnBytes1",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "bytes1"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "bytes1"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnBytes32",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "bytes32"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnInt8",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "int8"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "int8"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnInt16",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "int16"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "int16"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnInt24",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "int24"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "int24"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnInt32",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "int32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "int32"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnInt40",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "int40"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "int40"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnInt48",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "int48"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "int48"
+      }
+    ]
+  },
+  {
+    "name": "getAndReturnInt56",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "x",
+        "type": "int56"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "x",
+        "type": "int56"
+      }
+    ]
   }
 ]
