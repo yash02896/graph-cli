@@ -105,10 +105,10 @@ export function handleExampleEvent(event: ExampleEvent): void {
   entity.requiredBytes = contract.getAndReturnByte(entity.requiredBytes)
   entity.requiredBytes = contract.getAndReturnBytes1(entity.requiredBytes)
   entity.requiredBytes = contract.getAndReturnBytes32(entity.requiredBytes)
-  entity.requiredInt = contract.getAndReturnInt8(entity.requiredInt as i32)
-  entity.requiredInt = contract.getAndReturnInt16(entity.requiredInt as i32)
-  entity.requiredInt = contract.getAndReturnInt24(entity.requiredInt as i32)
-  entity.requiredInt = contract.getAndReturnInt32(entity.requiredInt as i32)
+  entity.requiredInt = contract.getAndReturnInt8(entity.requiredInt)
+  entity.requiredInt = contract.getAndReturnInt16(entity.requiredInt)
+  entity.requiredInt = contract.getAndReturnInt24(entity.requiredInt)
+  entity.requiredInt = contract.getAndReturnInt32(entity.requiredInt)
 
   // Store access
 
