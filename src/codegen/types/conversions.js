@@ -55,16 +55,61 @@ const ASSEMBLYSCRIPT_TO_ETHEREUM_VALUE = [
   [
     'BigInt',
     /^int(40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)$/,
-    code => `EthereumValue.fromBigIntSigned(${code})`,
+    code => `EthereumValue.fromSignedBigInt(${code})`,
   ],
   [
     'BigInt',
     /^uint(40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)$/,
-    code => `EthereumValue.fromBigIntUnsigned(${code})`,
+    code => `EthereumValue.fromUnsignedBigInt(${code})`,
   ],
   ['string', 'string', code => `EthereumValue.fromString(${code})`],
 
   // TODO: arrays
+  [
+    'Array<Address>',
+    /^address\[([0-9]+)?\]$/,
+    code => `EthereumValue.fromAddressArray(${code})`,
+  ],
+  [
+    'Array<boolean>',
+    /^bool\[([0-9]+)?\]$/,
+    code => `EthereumValue.fromBooleanArray(${code})`,
+  ],
+  [
+    'Array<Bytes>',
+    /^byte\[([0-9]+)?\]$/,
+    code => `EthereumValue.fromBytesArray(${code})`,
+  ],
+  [
+    'Array<Bytes>',
+    /^bytes(1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32)?\[([0-9]+)?\]$/,
+    code => `EthereumValue.fromBytesArray(${code})`,
+  ],
+  [
+    'Array<i32>',
+    /^int(8|16|24|32)\[([0-9]+)?\]$/,
+    code => `EthereumValue.fromI32Array(${code})`,
+  ],
+  [
+    'Array<u32>',
+    /^uint(8|16|24|32)\[([0-9]+)?\]$/,
+    code => `EthereumValue.fromU32Array(${code})`,
+  ],
+  [
+    'Array<BigInt>',
+    /^int(40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)\[([0-9]+)?\]$/,
+    code => `EthereumValue.fromSignedBigIntArray(${code})`,
+  ],
+  [
+    'Array<BigInt>',
+    /^uint(40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)\[([0-9]+)?\]$/,
+    code => `EthereumValue.fromUnsignedBigIntArray(${code})`,
+  ],
+  [
+    'Array<String>',
+    /^string\[([0-9]+)?\]$/,
+    code => `EthereumValue.fromStringArray(${code})`,
+  ],
 ]
 
 /**
