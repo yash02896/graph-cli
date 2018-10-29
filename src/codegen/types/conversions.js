@@ -20,18 +20,22 @@ const ETHEREUM_VALUE_TO_ASSEMBLYSCRIPT = [
     code => `${code}.toBigInt()`,
   ],
   ['string', 'string', code => `${code}.toString()`],
-  [/address\[([0-9]+)?\]/, 'Array<Address>', code => `${code}.toAddressArray()`],
-  //[/bool\[([0-9]+)?\]/, 'Array<boolean>', code => `${code}.toBooleanArray()`],
-  //[/byte\[([0-9]+)?\]/, 'Array<Bytes>', 'toBytesArray'],
-  //[/bytes([0-9]+)?\[([0-9]+)?\]/, 'Array<Bytes>', 'toBytesArray'],
-  //[/int(8|16|24|32)\[([0-9]+)?\]/, 'Array<i32>', 'toI32Array'],
-  //[/uint(8|16|24|32)\[([0-9]+)?\]/, 'Array<u32>', 'toU32Array'],
-  //[
-  //  /u?int(40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)\[([0-9]+)?\]/,
-  //  'Array<BigInt>',
-  //  'toBigIntArray',
-  //],
-  //[/string\[([0-9]+)?\]/, 'Array<String>', 'toStringArray'],
+  [/^address\[([0-9]+)?\]$/, 'Array<Address>', code => `${code}.toAddressArray()`],
+  [/^bool\[([0-9]+)?\]$/, 'Array<boolean>', code => `${code}.toBooleanArray()`],
+  [/^byte\[([0-9]+)?\]$/, 'Array<Bytes>', code => `${code}.toBytesArray()`],
+  [
+    /^bytes(1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32)?\[([0-9]+)?\]$/,
+    'Array<Bytes>',
+    code => `${code}.toBytesArray()`,
+  ],
+  [/^int(8|16|24|32)\[([0-9]+)?\]$/, 'Array<i32>', code => `${code}.toI32Array()`],
+  [/^uint(8|16|24|32)\[([0-9]+)?\]$/, 'Array<u32>', code => `${code}.toU32Array()`],
+  [
+    /^u?int(40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)\[([0-9]+)?\]$/,
+    'Array<BigInt>',
+    code => `${code}.toBigIntArray()`,
+  ],
+  [/^string\[([0-9]+)?\]$/, 'Array<String>', code => `${code}.toStringArray()`],
 ]
 
 /**
