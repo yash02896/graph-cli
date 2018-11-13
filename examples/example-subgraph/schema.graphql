@@ -1,31 +1,3 @@
 type ExampleEntity @entity {
-  optionalBoolean: Boolean
-  requiredBoolean: Boolean!
-  optionalBooleanList: [Boolean!]
-  requiredBooleanList: [Boolean!]!
-
-  optionalString: String
-  requiredString: String!
-  optionalStringList: [String!]
-  requiredStringList: [String!]!
-
-  optionalBytes: Bytes
-  requiredBytes: Bytes!
-  optionalBytesList: [Bytes!]
-  requiredBytesList: [Bytes!]!
-
-  optionalInt: Int
-  requiredInt: Int!
-  optionalIntList: [Int!]
-  requiredIntList: [Int!]!
-
-  optionalBigInt: BigInt
-  requiredBigInt: BigInt!
-  optionalBigIntList: [BigInt!]
-  requiredBigIntList: [BigInt!]!
-
-  optionalReference: OtherEntity
-  requiredReference: OtherEntity!
-  optionalReferenceList: [OtherEntity!]
-  requiredReferenceList: [OtherEntity!]!
+  exampleAttribute: String!
 }
