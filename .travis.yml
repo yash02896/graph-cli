@@ -5,7 +5,7 @@ node_js:
   - "10"
 cache: yarn
 before_install:
-  - sudo apt-get install libsecret-1-dev
+  - sudo apt-get install libsecret-1-dev dbus
 script:
   - yarn test
   - cd examples/example-subgraph
