@@ -12,4 +12,4 @@ script:
   - yarn
   - ../../graph.js codegen --output-dir src/types --debug
   - ../../graph.js build --debug
-  - ../../graph.js auth http://some-node-ip.org test-access-token
+  - dbus-run-session ../../graph.js auth http://some-node-ip.org test-access-token
