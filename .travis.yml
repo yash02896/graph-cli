@@ -13,5 +13,5 @@ script:
   - yarn
   - ../../graph.js codegen --output-dir src/types --debug
   - ../../graph.js build --debug
-  - echo "eval $(dbus-launch /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh); export SSH_AUTH_SOCK" > ~/.xinitrc
+  - echo 'eval $(dbus-launch /usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh); export $(dbus-launch gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)' >> ~/.xinitrc
   - dbus-launch ../../graph.js auth http://some-node-ip.org test-access-token
