@@ -14,6 +14,6 @@ script:
   - ../../graph.js codegen --output-dir src/types --debug
   - ../../graph.js build --debug
   - echo 'eval $(dbus-launch /usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh); export $(dbus-launch gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)' >> ~/.xinitrc
-  - echo 'auth optional pam_gnome_keyring.so' >> /etc/pam.d/login
-  - echo 'session optional pam_gnome_keyring.so auto_start' >> /etc/pam.d/login
+  - sudo (echo 'auth optional pam_gnome_keyring.so' >> /etc/pam.d/login)
+  - sudo (echo 'session optional pam_gnome_keyring.so auto_start' >> /etc/pam.d/login)
   - dbus-launch ../../graph.js auth http://some-node-ip.org test-access-token
