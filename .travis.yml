@@ -7,7 +7,6 @@ cache: yarn
 before_install:
   - sudo apt-get install libsecret-1-dev dbus gnome-keyring python-keyring python-gnomekeyring
 before_script:
-  - sudo chmod 0711 /usr/bin/gnome-keyring-daemon
   - sudo chmod u-s /usr/bin/gnome-keyring-daemon
   - eval $(echo -n "" | /usr/bin/gnome-keyring-daemon --login)
   - eval $(/usr/bin/gnome-keyring-daemon --components=secrets --start)
