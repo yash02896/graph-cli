@@ -8,7 +8,6 @@ before_install:
   - sudo apt-get install libsecret-1-dev dbus gnome-keyring python-keyring python-gnomekeyring
 before_script:
   - sudo chmod u-s /usr/bin/gnome-keyring-daemon
-  - eval $(echo -n "" | /usr/bin/gnome-keyring-daemon --login)
   - eval $(/usr/bin/gnome-keyring-daemon --components=secrets --start)
   - dbus-launch /usr/bin/python -c "import gnomekeyring;gnomekeyring.create_sync('login', '');"
 script:
