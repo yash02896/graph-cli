@@ -6,14 +6,18 @@ node_js:
   - "10"
 cache: yarn
 before_install:
-  - sudo apt-get install libsecret-1-dev dbus gnome-keyring python-keyring
+  - sudo apt-get install libsecret-1-dev dbus gnome-keyring python-keyring python-gnomekeyring
+before_script:
+  - eval $(echo -n "" | /usr/bin/gnome-keyring-daemon --login)
+  - eval $(/usr/bin/gnome-keyring-daemon --components=secrets --start)
+  - dbus-launch /usr/bin/python -c "import gnomekeyring;gnomekeyring.create_sync('login', '');"
 script:
   - yarn test
   - cd examples/example-subgraph
   - yarn
   - ../../graph.js codegen --output-dir src/types --debug
   - ../../graph.js build --debug
-  - echo 'auth optional pam_gnome_keyring.so' | sudo tee -a /etc/pam.d/login
-  - echo 'session optional pam_gnome_keyring.so auto_start' | sudo tee -a /etc/pam.d/login
-  - echo 'eval $(dbus-launch /usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh); export $(dbus-launch gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)' >> ~/.xinitrc
+  # - echo 'auth optional pam_gnome_keyring.so' | sudo tee -a /etc/pam.d/login
+  # - echo 'session optional pam_gnome_keyring.so auto_start' | sudo tee -a /etc/pam.d/login
+  # - echo 'eval $(dbus-launch /usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh); export $(dbus-launch gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)' >> ~/.xinitrc
   - dbus-launch ../../graph.js auth http://some-node-ip.org test-access-token
