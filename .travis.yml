@@ -9,7 +9,6 @@ before_install:
 before_script:
   - sudo chmod 0711 /usr/bin/gnome-keyring-daemon
   - sudo chmod u-s /usr/bin/gnome-keyring-daemon
-  - ls -l /usr/bin/gnome-keyring-daemon
   - eval $(echo -n "" | /usr/bin/gnome-keyring-daemon --login)
   - eval $(/usr/bin/gnome-keyring-daemon --components=secrets --start)
   - dbus-launch /usr/bin/python -c "import gnomekeyring;gnomekeyring.create_sync('login', '');"
@@ -19,8 +18,4 @@ script:
   - yarn
   - ../../graph.js codegen --output-dir src/types --debug
   - ../../graph.js build --debug
-  # - echo 'auth optional pam_gnome_keyring.so' | sudo tee -a /etc/pam.d/login
-  # - echo 'session optional pam_gnome_keyring.so auto_start' | sudo tee -a /etc/pam.d/login
-  # - echo 'eval $(dbus-launch /usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh); export $(dbus-launch gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)' >> ~/.xinitrc
-  - ps aux
   - dbus-launch bash -c '../../graph.js auth http://some-node-ip.org test-access-token'
