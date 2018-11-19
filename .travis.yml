@@ -13,7 +13,7 @@ script:
   - yarn
   - ../../graph.js codegen --output-dir src/types --debug
   - ../../graph.js build --debug
-  # - echo 'eval $(dbus-launch /usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh); export $(dbus-launch gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)' >> ~/.xinitrc
   - echo 'auth optional pam_gnome_keyring.so' | sudo tee -a /etc/pam.d/login
   - echo 'session optional pam_gnome_keyring.so auto_start' | sudo tee -a /etc/pam.d/login
+  - echo 'eval $(dbus-launch /usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh); export $(dbus-launch gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)' >> ~/.xinitrc
   - dbus-launch ../../graph.js auth http://some-node-ip.org test-access-token
