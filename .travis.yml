@@ -24,4 +24,4 @@ script:
   # - echo 'session optional pam_gnome_keyring.so auto_start' | sudo tee -a /etc/pam.d/login
   # - echo 'eval $(dbus-launch /usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh); export $(dbus-launch gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)' >> ~/.xinitrc
   - ps aux
-  - dbus-launch bash -c 'GNOME_KEYRING_CONTROL=1 ../../graph.js auth http://some-node-ip.org test-access-token'
+  - dbus-launch bash -c '../../graph.js auth http://some-node-ip.org test-access-token'
