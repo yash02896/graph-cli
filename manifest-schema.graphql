@@ -9,6 +9,7 @@ union DataSource = EthereumContractDataSource
 
 type EthereumContractDataSource {
   kind: String!
+  network: String!
   name: String!
   source: EthereumContractSource!
   mapping: EthereumContractMapping!
@@ -41,6 +42,8 @@ type EthereumContractEventHandlers {
 
 type SubgraphManifest {
   specVersion: String!
+  description: String
+  repository: String
   schema: Schema!
   dataSources: [DataSource!]!
 }
