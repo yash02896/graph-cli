@@ -1,38 +1,6 @@
 const chalk = require('chalk')
-const Compiler = require('../compiler')
 
-// Helper function to construct a subgraph compiler
-function createCompiler(manifest, { ipfs, logLevel, outputDir, outputFormat, toolbox }) {
-  // Parse the IPFS URL
-  let url
-  try {
-    url = ipfs ? new URL(ipfs) : undefined
-  } catch (e) {
-    toolbox.print.error(`Invalid IPFS URL: ${ipfs}
-The IPFS URL must be of the following format: http(s)://host[:port]/[path]`)
-    return null
-  }
-
-  // Connect to the IPFS node (if a node address was provided)
-  ipfs = ipfs
-    ? ipfsHttpClient({
-        protocol: url.protocol.replace(/[:]+$/, ''),
-        host: url.hostname,
-        port: url.port,
-        'api-path': url.pathname.replace(/\/$/, '') + '/api/v0/',
-      })
-    : undefined
-
-  return new Compiler({
-    ipfs,
-    subgraphManifest: manifest,
-    outputDir: outputDir,
-    outputFormat: outputFormat,
-    logger: {
-      verbosity: logLevel,
-    },
-  })
-}
+const { createCompiler } = require('../command-helpers/compiler')
 
 const HELP = `
 ${chalk.bold('graph build')} [options] ${chalk.bold('[subgraph-manifest]')}
@@ -83,7 +51,6 @@ module.exports = {
       ipfs,
       outputDir,
       outputFormat,
-      logLevel: verbose || debug ? 'debug' : 'info',
     })
 
     // Exit with an error code if the compiler couldn't be created
