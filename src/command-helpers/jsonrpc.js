@@ -1,6 +1,7 @@
 const jayson = require('jayson')
+const toolbox = require('gluegun/toolbox')
 
-const createJsonRpcClient = (url, { toolbox }) => {
+const createJsonRpcClient = url => {
   let params = {
     host: url.hostname,
     port: url.port,

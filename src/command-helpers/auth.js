@@ -1,7 +1,8 @@
 const keytar = require('keytar')
+const toolbox = require('gluegun/toolbox')
 const { normalizeNodeUrl } = require('./node')
 
-const identifyAccessToken = async (node, accessToken, toolbox) => {
+const identifyAccessToken = async (node, accessToken) => {
   // Determine the access token to use, if any:
   // - First try using --access-token, if provided
   // - Then see if we have an access token set for the Graph node
