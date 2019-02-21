@@ -12,7 +12,6 @@ Options:
   -o, --output-dir <path>   Output directory for build results (default: build/)
   -t, --output-format <format> 
                             Output format for mappings (wasm, wast) (default: wasm)
-      --verbose             Log detailed information
   -w, --watch               Regenerate types when subgraph files change (default: false)
 `
 
@@ -23,16 +22,7 @@ module.exports = {
     let { filesystem, print, system } = toolbox
 
     // Parse CLI parameters
-    let {
-      debug,
-      h,
-      help,
-      ipfs,
-      outputDir,
-      outputFormat,
-      verbose,
-      watch,
-    } = toolbox.parameters.options
+    let { h, help, ipfs, outputDir, outputFormat, watch } = toolbox.parameters.options
     outputFormat =
       outputFormat && ['wasm', 'wast'].indexOf(outputFormat) >= 0 ? outputFormat : 'wasm'
     outputDir = outputDir && outputDir !== '' ? outputDir : filesystem.path('build')
