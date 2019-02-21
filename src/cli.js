@@ -1,6 +1,6 @@
 const { build } = require('gluegun')
 
-async function run(argv) {
+const run = async argv => {
   const cli = build()
     .brand('graph')
     .src(__dirname)
