@@ -20,7 +20,6 @@ Options:
   -h, --help                Show usage information
       --ipfs <node>         Upload build results to an IPFS node
   -o, --output-dir <path>   Output directory for build results (default: build/)
-      --verbose             Log detailed information
   -w, --watch               Regenerate types when subgraph files change (default: false)
 `
 
@@ -33,14 +32,12 @@ module.exports = {
     // Parse CLI parameters
     let {
       accessToken,
-      debug,
       g,
       h,
       help,
       ipfs,
       node,
       outputDir,
-      verbose,
       watch,
     } = toolbox.parameters.options
     outputDir = outputDir && outputDir !== '' ? outputDir : filesystem.path('build')
@@ -189,7 +186,7 @@ $ graph create --node ${node} ${subgraphName}`)
           print.error('Failed to watch, compile or deploy the subgraph:', e)
         })
     } else {
-      compiler.compile().then(async function(result) {
+      compiler.compile().then(async result => {
         if (result === undefined || result === false) {
           // Compilation failed, not deploying.
           process.exitCode = 1
