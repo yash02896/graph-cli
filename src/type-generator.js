@@ -49,12 +49,8 @@ module.exports = class TypeGenerator {
         : Subgraph.load(this.options.subgraphManifest)
     } else {
       return await withSpinner(
-        `Load subgraph from ${chalk.dim(
-          this.displayPath(this.options.subgraphManifest)
-        )}`,
-        `Failed to load subgraph from ${chalk.dim(
-          this.displayPath(this.options.subgraphManifest)
-        )}`,
+        `Load subgraph from ${this.displayPath(this.options.subgraphManifest)}`,
+        `Failed to load subgraph from ${this.displayPath(this.options.subgraphManifest)}`,
         async spinner => {
           try {
             return this.options.subgraph
@@ -131,7 +127,7 @@ module.exports = class TypeGenerator {
     try {
       step(
         spinner,
-        `Generate types for contract ABI`,
+        `Generate types for contract ABI:`,
         `${abi.abi.name} (${this.displayPath(abi.abi.file)})`
       )
 
@@ -162,8 +158,8 @@ module.exports = class TypeGenerator {
     let maybeRelativePath = subgraph.getIn(['schema', 'file'])
     let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
     return await withSpinner(
-      `Load GraphQL schema from ${chalk.dim(this.displayPath(absolutePath))}`,
-      `Failed to load GraphQL schema from ${chalk.dim(this.displayPath(absolutePath))}`,
+      `Load GraphQL schema from ${this.displayPath(absolutePath)}`,
+      `Failed to load GraphQL schema from ${this.displayPath(absolutePath)}`,
       async spinner => {
         let maybeRelativePath = subgraph.getIn(['schema', 'file'])
         let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
@@ -231,15 +227,13 @@ module.exports = class TypeGenerator {
       onReady: () => (spinner = toolbox.print.spin('Watching subgraph files')),
       onTrigger: async changedFile => {
         if (changedFile !== undefined) {
-          spinner.stopAndPersist({
-            text: `File change detected: ${chalk.dim(this.displayPath(changedFile))}\n`,
-          })
+          spinner.info(`File change detected: ${this.displayPath(changedFile)}\n`)
         }
         await generator.generateTypes()
         spinner.start()
       },
       onCollectFiles: async () => await generator.getFilesToWatch(),
-      onError: error => toolbox.print.error(error),
+      onError: error => toolbox.print.error(`${error}`),
     })
 
     // Catch keyboard interrupt: close watcher and exit process
