@@ -2,7 +2,7 @@ const chalk = require('chalk')
 const TypeGenerator = require('../type-generator')
 
 const HELP = `
-${chalk.bold('graph codegen')} [options] ${chalk.bold('[subgraph-manifest]')}
+${chalk.bold('graph codegen')} [options] ${chalk.bold('[<subgraph-manifest>]')}
 
 Options:
 
