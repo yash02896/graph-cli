@@ -24,7 +24,6 @@ module.exports = {
     // Read CLI parameters
     let { accessToken, debug, g, h, help, node, verbose } = toolbox.parameters.options
     let subgraphName = toolbox.parameters.first
-    let logLevel = debug || verbose ? 'debug' : 'info'
     node = node || g
 
     // Show help text if requested
