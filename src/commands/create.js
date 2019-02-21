@@ -22,7 +22,7 @@ module.exports = {
     let { filesystem, print, system } = toolbox
 
     // Read CLI parameters
-    let { accessToken, debug, g, h, help, node, verbose } = toolbox.parameters.options
+    let { accessToken, g, h, help, node } = toolbox.parameters.options
     let subgraphName = toolbox.parameters.first
     node = node || g
 
