@@ -3,12 +3,12 @@ const chalk = require('chalk')
 const { createCompiler } = require('../command-helpers/compiler')
 
 const HELP = `
-${chalk.bold('graph build')} [options] ${chalk.bold('[subgraph-manifest]')}
+${chalk.bold('graph build')} [options] ${chalk.bold('[<subgraph-manifest>]')}
 
 Options:
 
-      --ipfs <node>         Upload build results to an IPFS node
   -h, --help                Show usage information
+      --ipfs <node>         Upload build results to an IPFS node
   -o, --output-dir <path>   Output directory for build results (default: build/)
   -t, --output-format <format> 
                             Output format for mappings (wasm, wast) (default: wasm)
