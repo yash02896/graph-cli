@@ -1,0 +1,38 @@
+const keytar = require('keytar')
+const { normalizeNodeUrl } = require('./node')
+
+const identifyAccessToken = async (node, accessToken, toolbox) => {
+  // Determine the access token to use, if any:
+  // - First try using --access-token, if provided
+  // - Then see if we have an access token set for the Graph node
+  if (accessToken !== undefined) {
+    return accessToken
+  } else {
+    try {
+      node = normalizeNodeUrl(node)
+      return await keytar.getPassword('graphprotocol-auth', node)
+    } catch (e) {
+      if (process.platform === 'win32') {
+        toolbox.print.warning(
+          `Could not get access token from Windows Credential Vault: ${e}`
+        )
+      } else if (process.platform === 'darwin') {
+        toolbox.print.warning(`Could not get access token from macOS Keychain: ${e}`)
+      } else if (process.platform === 'linux') {
+        toolbox.print.warning(
+          `Could not get access token from libsecret ` +
+            `(usually gnome-keyring or ksecretservice): ${e}`
+        )
+      } else {
+        toolbox.print.warning(
+          `Could not get access token from OS secret storage service: ${e}`
+        )
+      }
+      toolbox.print.info(`Continuing without an access token`)
+    }
+  }
+}
+
+module.exports = {
+  identifyAccessToken,
+}
