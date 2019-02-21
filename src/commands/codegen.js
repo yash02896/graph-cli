@@ -8,7 +8,6 @@ Options:
 
   -h, --help                Show usage information
   -o, --output-dir <path>   Output directory for generated types (default: generated/)
-      --verbose             Log detailed information
   -w, --watch               Regenerate types when subgraph files change (default: false)
 `
 
@@ -19,7 +18,7 @@ module.exports = {
     let { filesystem, print, system } = toolbox
 
     // Read CLI parameters
-    let { debug, verbose, h, help, outputDir, watch } = toolbox.parameters.options
+    let { h, help, outputDir, watch } = toolbox.parameters.options
     outputDir =
       outputDir !== undefined && outputDir !== ''
         ? outputDir
