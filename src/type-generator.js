@@ -1,28 +1,26 @@
-let fs = require('fs-extra')
-let immutable = require('immutable')
-let path = require('path')
-let prettier = require('prettier')
-let graphql = require('graphql/language')
+const fs = require('fs-extra')
+const immutable = require('immutable')
+const path = require('path')
+const prettier = require('prettier')
+const graphql = require('graphql/language')
+const chalk = require('chalk')
+const toolbox = require('gluegun/toolbox')
 
-let ABI = require('./abi')
-let Logger = require('./logger')
-let Schema = require('./schema')
-let Subgraph = require('./subgraph')
-let Watcher = require('./watcher')
+const ABI = require('./abi')
+const Schema = require('./schema')
+const Subgraph = require('./subgraph')
+const Watcher = require('./watcher')
+const { step, withSpinner } = require('./command-helpers/spinner')
 
 module.exports = class TypeGenerator {
   constructor(options) {
     this.options = options || {}
-    this.logger = new Logger(5, {
-      prefix: this.options.logger.prefix,
-      verbosity: this.options.logger.verbosity,
-    })
     this.sourceDir =
       this.options.sourceDir ||
       (this.options.subgraphManifest && path.dirname(this.options.subgraphManifest))
 
     process.on('uncaughtException', function(e) {
-      this.logger.error('UNCAUGHT EXCEPTION:', e)
+      toolbox.print.error(`UNCAUGHT EXCEPTION: ${e}`)
     })
   }
 
@@ -30,69 +28,84 @@ module.exports = class TypeGenerator {
     return path.relative(process.cwd(), p)
   }
 
-  generateTypes() {
-    this.logger.currentStep = 0
-    if (this.options.subgraphManifest) {
-      this.logger.step('Load subgraph:', this.displayPath(this.options.subgraphManifest))
-    } else {
-      this.logger.step('Load subgraph')
-    }
-
+  async generateTypes() {
     try {
-      let subgraph = this.loadSubgraph()
-
-      let abis = this.loadABIs(subgraph)
-      this.generateTypesForABIs(abis)
-
-      let schema = this.loadSchema(subgraph)
-      this.generateTypesForSchema(schema)
-
-      this.logger.status('Types generated')
-      this.logger.note('')
-
+      let subgraph = await this.loadSubgraph()
+      let abis = await this.loadABIs(subgraph)
+      await this.generateTypesForABIs(abis)
+      let schema = await this.loadSchema(subgraph)
+      await this.generateTypesForSchema(schema)
+      toolbox.print.success('\nTypes generated successfully\n')
       return true
     } catch (e) {
-      this.logger.error('Failed to generate types:', e)
       return false
     }
   }
 
-  loadSubgraph() {
-    try {
+  async loadSubgraph({ quiet } = { quiet: false }) {
+    if (quiet) {
       return this.options.subgraph
         ? this.options.subgraph
         : Subgraph.load(this.options.subgraphManifest)
-    } catch (e) {
-      throw Error(`Failed to load subgraph: ${e.message}`)
+    } else {
+      return await withSpinner(
+        `Load subgraph from ${chalk.dim(
+          this.displayPath(this.options.subgraphManifest)
+        )}`,
+        `Failed to load subgraph from ${chalk.dim(
+          this.displayPath(this.options.subgraphManifest)
+        )}`,
+        async spinner => {
+          try {
+            return this.options.subgraph
+              ? this.options.subgraph
+              : Subgraph.load(this.options.subgraphManifest)
+          } catch (e) {
+            throw Error(`Failed to load subgraph: ${e.message}`)
+          }
+        }
+      )
     }
   }
 
-  loadABIs(subgraph) {
-    try {
-      this.logger.step('Load contract ABIs')
-      return subgraph
-        .get('dataSources')
-        .reduce(
-          (abis, dataSource) =>
-            dataSource
-              .getIn(['mapping', 'abis'])
-              .reduce(
-                (abis, abi) =>
-                  abis.push(this._loadABI(dataSource, abi.get('name'), abi.get('file'))),
-                abis
-              ),
-          immutable.List()
-        )
-    } catch (e) {
-      throw Error(`Failed to load contract ABIs: ${e}`)
-    }
+  async loadABIs(subgraph) {
+    return await withSpinner(
+      'Load contract ABIs',
+      'Failed to load contract ABIs',
+      async spinner => {
+        try {
+          return subgraph
+            .get('dataSources')
+            .reduce(
+              (abis, dataSource) =>
+                dataSource
+                  .getIn(['mapping', 'abis'])
+                  .reduce(
+                    (abis, abi) =>
+                      abis.push(
+                        this._loadABI(
+                          dataSource,
+                          abi.get('name'),
+                          abi.get('file'),
+                          spinner
+                        )
+                      ),
+                    abis
+                  ),
+              immutable.List()
+            )
+        } catch (e) {
+          throw Error(`Failed to load contract ABIs: ${e}`)
+        }
+      }
+    )
   }
 
-  _loadABI(dataSource, name, maybeRelativePath) {
+  _loadABI(dataSource, name, maybeRelativePath, spinner) {
     try {
       if (this.sourceDir) {
         let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
-        this.logger.note('Load contract ABI file:', this.displayPath(absolutePath))
+        step(spinner, `Load contract ABI from`, this.displayPath(absolutePath))
         return { dataSource: dataSource, abi: ABI.load(name, absolutePath) }
       } else {
         return { dataSource: dataSource, abi: ABI.load(name, maybeRelativePath) }
@@ -103,20 +116,23 @@ module.exports = class TypeGenerator {
   }
 
   generateTypesForABIs(abis) {
-    try {
-      this.logger.step('Generate types for contract ABIs')
-      return abis.map((abi, name) => this._generateTypesForABI(abi))
-    } catch (e) {
-      throw Error(`Failed to generate types for contract ABIs: ${e}`)
-    }
+    return withSpinner(
+      `Generate types for contract ABIs`,
+      `Failed to generate types for contract ABIs`,
+      async spinner => {
+        return await abis.map(
+          async (abi, name) => await this._generateTypesForABI(abi, spinner)
+        )
+      }
+    )
   }
 
-  _generateTypesForABI(abi) {
+  async _generateTypesForABI(abi, spinner) {
     try {
-      this.logger.note(
-        'Generate types for contract ABI:',
-        abi.abi.name,
-        `(${path.basename(abi.abi.file)})`
+      step(
+        spinner,
+        `Generate types for contract ABI`,
+        `${abi.abi.name} (${this.displayPath(abi.abi.file)})`
       )
 
       let codeGenerator = abi.abi.codeGenerator()
@@ -134,7 +150,7 @@ module.exports = class TypeGenerator {
         abi.dataSource.get('name'),
         `${abi.abi.name}.ts`
       )
-      this.logger.note('Write types to:', this.displayPath(outputFile))
+      step(spinner, `Write types to`, this.displayPath(outputFile))
       fs.mkdirsSync(path.dirname(outputFile))
       fs.writeFileSync(outputFile, code)
     } catch (e) {
@@ -142,45 +158,49 @@ module.exports = class TypeGenerator {
     }
   }
 
-  loadSchema(subgraph) {
-    try {
-      this.logger.step('Load GraphQL schema')
-      let maybeRelativePath = subgraph.getIn(['schema', 'file'])
-      let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
-      return Schema.load(absolutePath)
-    } catch (e) {
-      throw Error(`Failed to load GraphQL schema: ${e}`)
-    }
+  async loadSchema(subgraph) {
+    let maybeRelativePath = subgraph.getIn(['schema', 'file'])
+    let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
+    return await withSpinner(
+      `Load GraphQL schema from ${chalk.dim(this.displayPath(absolutePath))}`,
+      `Failed to load GraphQL schema from ${chalk.dim(this.displayPath(absolutePath))}`,
+      async spinner => {
+        let maybeRelativePath = subgraph.getIn(['schema', 'file'])
+        let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
+        return Schema.load(absolutePath)
+      }
+    )
   }
 
-  generateTypesForSchema(schema) {
-    try {
-      this.logger.step('Generate types for GraphQL schema')
+  async generateTypesForSchema(schema) {
+    return await withSpinner(
+      `Generate types for GraphQL schema`,
+      `Failed to generate types for GraphQL schema`,
+      async spinner => {
+        // Generate TypeScript module from schema
+        let codeGenerator = schema.codeGenerator()
+        let code = prettier.format(
+          [
+            ...codeGenerator.generateModuleImports(),
+            ...codeGenerator.generateTypes(),
+          ].join('\n'),
+          {
+            parser: 'typescript',
+          }
+        )
 
-      // Generate TypeScript module from schema
-      let codeGenerator = schema.codeGenerator()
-      let code = prettier.format(
-        [...codeGenerator.generateModuleImports(), ...codeGenerator.generateTypes()].join(
-          '\n'
-        ),
-        {
-          parser: 'typescript',
-        }
-      )
-
-      let outputFile = path.join(this.options.outputDir, 'schema.ts')
-      this.logger.note('Write types to:', this.displayPath(outputFile))
-      fs.mkdirsSync(path.dirname(outputFile))
-      fs.writeFileSync(outputFile, code)
-    } catch (e) {
-      throw Error(`Failed to generate types for GraphQL schema: ${e}`)
-    }
+        let outputFile = path.join(this.options.outputDir, 'schema.ts')
+        step(spinner, 'Write types to', this.displayPath(outputFile))
+        fs.mkdirsSync(path.dirname(outputFile))
+        fs.writeFileSync(outputFile, code)
+      }
+    )
   }
 
-  getFilesToWatch() {
+  async getFilesToWatch() {
     try {
       let files = []
-      let subgraph = this.loadSubgraph()
+      let subgraph = await this.loadSubgraph({ quiet: true })
 
       // Add the subgraph manifest file
       files.push(this.options.subgraphManifest)
@@ -202,20 +222,24 @@ module.exports = class TypeGenerator {
     }
   }
 
-  watchAndGenerateTypes() {
+  async watchAndGenerateTypes() {
     let generator = this
+    let spinner
 
     // Create watcher and generate types once and then on every change to a watched file
     let watcher = new Watcher({
-      onReady: () => generator.logger.status('Watching subgraph files'),
+      onReady: () => (spinner = toolbox.print.spin('Watching subgraph files')),
       onTrigger: async changedFile => {
         if (changedFile !== undefined) {
-          generator.logger.status('File change detected:', this.displayPath(changedFile))
+          spinner.stopAndPersist({
+            text: `File change detected: ${chalk.dim(this.displayPath(changedFile))}\n`,
+          })
         }
         await generator.generateTypes()
+        spinner.start()
       },
-      onCollectFiles: () => generator.getFilesToWatch(),
-      onError: error => generator.logger.error('Error:', error),
+      onCollectFiles: async () => await generator.getFilesToWatch(),
+      onError: error => toolbox.print.error(error),
     })
 
     // Catch keyboard interrupt: close watcher and exit process
@@ -225,9 +249,9 @@ module.exports = class TypeGenerator {
     })
 
     try {
-      watcher.watch()
+      await watcher.watch()
     } catch (e) {
-      this.logger.error('Error:', e)
+      toolbox.print.error(`${e}`)
     }
   }
 }
