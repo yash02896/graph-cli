@@ -32,6 +32,15 @@ module.exports = {
       return
     }
 
+    // Validate the subgraph name
+    if (!subgraphName) {
+      print.error('No subgraph name provided')
+      print.info(HELP)
+      process.exitCode = 1
+      return
+    }
+
+    // Validate node
     if (!node) {
       print.error(`No Graph node provided`)
       print.info(HELP)
@@ -47,7 +56,7 @@ module.exports = {
     }
 
     let requestUrl = new URL(node)
-    let client = createJsonRpcClient(requestUrl, { toolbox })
+    let client = createJsonRpcClient(requestUrl)
 
     // Exit with an error code if the client couldn't be created
     if (!client) {
@@ -56,7 +65,7 @@ module.exports = {
     }
 
     // Use the access token, if one is set
-    accessToken = await identifyAccessToken(node, accessToken, { toolbox })
+    accessToken = await identifyAccessToken(node, accessToken)
     if (accessToken !== undefined && accessToken !== null) {
       client.options.headers = { Authorization: `Bearer ${accessToken}` }
     }
