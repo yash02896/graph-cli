@@ -38,9 +38,6 @@ module.exports = {
     let generator = new TypeGenerator({
       subgraphManifest: manifest,
       outputDir: outputDir,
-      logger: {
-        verbosity: debug || verbose ? 'debug' : 'info',
-      },
     })
 
     // Watch working directory for file updates or additions, trigger
