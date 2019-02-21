@@ -2,16 +2,14 @@ const chalk = require('chalk')
 const keytar = require('keytar')
 
 const HELP = `
-${chalk.bold('graph auth')} ${chalk.bold('<node>')} ${chalk.bold('<access-token>')}
+${chalk.bold('graph auth')} [options] ${chalk.bold('<node>')} ${chalk.bold(
+  '<access-token>'
+)}
 
 ${chalk.dim('Options:')}
 
   -h, --help                Show usage information
 `
-
-const validateNodeUrl = node => new URL(node)
-
-const normalizeNodeUrl = node => new URL(node).toString()
 
 module.exports = {
   description: 'Sets the access token to use when deploying to a Graph node',
@@ -20,8 +18,7 @@ module.exports = {
     let { filesystem, print, system } = toolbox
 
     // Read CLI parameters
-    let { h, help } = toolbox.parameters.options
-    let node = toolbox.parameters.first
+    let { h, help, node } = toolbox.parameters.options
     let accessToken = toolbox.parameters.second
 
     // Show help text if requested
@@ -31,6 +28,12 @@ module.exports = {
     }
 
     // Fail if no valid Graph node was provided
+    if (!node) {
+      print.error(`No Graph node provided`)
+      print.info(HELP)
+      process.exitCode = 1
+      return
+    }
     try {
       validateNodeUrl(node)
     } catch (e) {
@@ -42,6 +45,7 @@ module.exports = {
     // Fail if no access token was provided
     if (!accessToken) {
       print.error(`No access token provided`)
+      print.info(HELP)
       process.exitCode = 1
       return
     }
