@@ -4,7 +4,7 @@ const toolbox = require('gluegun/toolbox')
 const step = (spinner, subject, text) => {
   if (text) {
     spinner.stopAndPersist({
-      text: toolbox.print.colors.muted(`${subject} ${chalk.dim(text)}`),
+      text: toolbox.print.colors.muted(`${subject} ${text}`),
     })
   } else {
     spinner.stopAndPersist({ text: subject })
@@ -21,6 +21,7 @@ const withSpinner = async (text, errorText, f) => {
     return result
   } catch (e) {
     spinner.fail(`${errorText}: ${e}`)
+    throw e
   }
 }
 

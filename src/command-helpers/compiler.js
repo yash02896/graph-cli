@@ -1,10 +1,9 @@
+const ipfsHttpClient = require('ipfs-http-client')
+const toolbox = require('gluegun/toolbox')
 const Compiler = require('../compiler')
 
 // Helper function to construct a subgraph compiler
-const createCompiler = (
-  manifest,
-  { ipfs, logLevel, outputDir, outputFormat, toolbox }
-) => {
+const createCompiler = (manifest, { ipfs, outputDir, outputFormat }) => {
   // Parse the IPFS URL
   let url
   try {
@@ -30,9 +29,6 @@ The IPFS URL must be of the following format: http(s)://host[:port]/[path]`)
     subgraphManifest: manifest,
     outputDir: outputDir,
     outputFormat: outputFormat,
-    logger: {
-      verbosity: logLevel,
-    },
   })
 }
 
