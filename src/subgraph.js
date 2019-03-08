@@ -251,6 +251,33 @@ Please update it to tell users more about your subgraph.`,
         )
   }
 
+  static validateEthereumContractHandlers(manifest) {
+    return manifest
+      .get('dataSources')
+      .filter(dataSource => dataSource.get('kind') === 'ethereum/contract')
+      .reduce((errors, dataSource, dataSourceIndex) => {
+        let path = ['dataSources', dataSourceIndex, 'mapping']
+
+        let mapping = dataSource.get('mapping')
+        let blockHandlers = mapping.get('blockHandlers', immutable.List())
+        let transactionHandlers = mapping.get('transactionHandlers', immutable.List())
+        let eventHandlers = mapping.get('eventHandlers', immutable.List())
+
+        return blockHandlers.isEmpty() &&
+          transactionHandlers.isEmpty() &&
+          eventHandlers.isEmpty()
+          ? errors.push(
+              immutable.fromJS({
+                path: path,
+                message: `\
+Mapping has no blockHandlers, transactionHandlers or eventHandlers.
+At least one such handler must be defined.`,
+              }),
+            )
+          : errors
+      }, immutable.List())
+  }
+
   static load(filename) {
     // Load and validate the manifest
     let data = yaml.safeLoad(fs.readFileSync(filename, 'utf-8'))
@@ -274,6 +301,7 @@ Please update it to tell users more about your subgraph.`,
       ...Subgraph.validateAbis(manifest, { resolveFile }),
       ...Subgraph.validateContractAddresses(manifest),
       ...Subgraph.validateEvents(manifest, { resolveFile }),
+      ...Subgraph.validateEthereumContractHandlers(manifest),
     )
 
     // Perform warning validations
