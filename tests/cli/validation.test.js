@@ -74,4 +74,14 @@ describe('Validation', () => {
       exitCode: 0,
     },
   )
+  cliTest('Entity field arguments', ['codegen'], 'validation/entity-field-args', {
+    exitCode: 1,
+  })
+  cliTest(
+    'Ethereum contract data source without handlers',
+    'validation/ethereum-contract-without-handlers',
+    {
+      exitCode: 1,
+    }
+  )
 })
