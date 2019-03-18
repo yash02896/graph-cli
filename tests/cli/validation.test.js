@@ -79,6 +79,7 @@ describe('Validation', () => {
   })
   cliTest(
     'Ethereum contract data source without handlers',
+    ['codegen'],
     'validation/ethereum-contract-without-handlers',
     {
       exitCode: 1,
