@@ -21,37 +21,39 @@ module.exports = class ABI {
         `${event.get('name')}(${event
           .get('inputs', immutable.List())
           .map(input => input.get('type'))
-          .join(',')})`
+          .join(',')})`,
     )
   }
 
-  transactionFunctionSignatures() {
+  transactionFunctions() {
     // An entry is a function if its type is not set or if it is one of
     // 'constructor', 'function' or 'fallback'
     let functionTypes = immutable.Set(['constructor', 'function', 'fallback'])
     let functions = this.data.filter(
-      entry => !entry.has('type') || functionTypes.includes(entry.get('type'))
+      entry => !entry.has('type') || functionTypes.includes(entry.get('type')),
     )
 
     // A function is a transaction function if it is nonpayable, payable or
     // not constant
     let mutabilityTypes = immutable.Set(['nonpayable', 'payable'])
-    return functions
-      .filter(
-        entry =>
-          mutabilityTypes.includes(entry.get('stateMutability')) ||
-          entry.get('constant') === false
-      )
-      .map(
-        entry =>
-          `${entry.get(
-            'name',
-            entry.get('type') === 'constructor' ? 'constructor' : '<default>'
-          )}(${entry
-            .get('inputs', immutable.List())
-            .map(input => input.get('type'))
-            .join(',')})`
-      )
+    return functions.filter(
+      entry =>
+        mutabilityTypes.includes(entry.get('stateMutability')) ||
+        entry.get('constant') === false,
+    )
+  }
+
+  transactionFunctionSignatures() {
+    return this.transactionFunctions().map(
+      entry =>
+        `${entry.get(
+          'name',
+          entry.get('type') === 'constructor' ? 'constructor' : '<default>',
+        )}(${entry
+          .get('inputs', immutable.List())
+          .map(input => input.get('type'))
+          .join(',')})`,
+    )
   }
 
   static load(name, file) {
