@@ -225,12 +225,12 @@ ${abiEvents
       }, immutable.List())
   }
 
-  static validateTransactionFunctions(manifest, { resolveFile }) {
+  static validateCallFunctions(manifest, { resolveFile }) {
     return manifest
       .get('dataSources')
       .filter(dataSource => dataSource.get('kind') === 'ethereum/contract')
       .reduce((errors, dataSource, dataSourceIndex) => {
-        let path = ['dataSources', dataSourceIndex, 'transactionHandlers']
+        let path = ['dataSources', dataSourceIndex, 'callHandlers']
 
         let abi
         try {
@@ -242,17 +242,17 @@ ${abiEvents
           abi = ABI.load(abiEntry.get('name'), resolveFile(abiEntry.get('file')))
         } catch (e) {
           // Ignore errors silently; we can't really say anything about
-          // the transaction functions if the ABI can't even be loaded
+          // the call functions if the ABI can't even be loaded
           return errors
         }
 
         // Obtain event signatures from the mapping
         let manifestFunctions = dataSource
-          .getIn(['mapping', 'transactionHandlers'], immutable.List())
+          .getIn(['mapping', 'callHandlers'], immutable.List())
           .map(handler => handler.get('function'))
 
         // Obtain event signatures from the ABI
-        let abiFunctions = abi.transactionFunctionSignatures()
+        let abiFunctions = abi.callFunctionSignatures()
 
         // Add errors for every manifest event signature that is not
         // present in the ABI
@@ -264,10 +264,10 @@ ${abiEvents
                   immutable.fromJS({
                     path: [...path, index],
                     message: `\
-Transaction function with signature '${manifestFunction}' not present in ABI '${
+Call function with signature '${manifestFunction}' not present in ABI '${
                       abi.name
                     }'.
-Available transaction functions:
+Available call functions:
 ${abiFunctions
                       .sort()
                       .map(tx => `- ${tx}`)
@@ -315,17 +315,17 @@ Please update it to tell users more about your subgraph.`,
 
         let mapping = dataSource.get('mapping')
         let blockHandler = mapping.get('blockHandler', undefined)
-        let transactionHandlers = mapping.get('transactionHandlers', immutable.List())
+        let callHandlers = mapping.get('callHandlers', immutable.List())
         let eventHandlers = mapping.get('eventHandlers', immutable.List())
 
         return blockHandler === undefined &&
-          transactionHandlers.isEmpty() &&
+          callHandlers.isEmpty() &&
           eventHandlers.isEmpty()
           ? errors.push(
               immutable.fromJS({
                 path: path,
                 message: `\
-Mapping has no blockHandler, transactionHandlers or eventHandlers.
+Mapping has no blockHandler, callHandlers or eventHandlers.
 At least one such handler must be defined.`,
               })
             )
@@ -363,8 +363,8 @@ At least one such handler must be defined.`,
     let warnings = immutable.List.of(
       ...Subgraph.validateRepository(manifest, { resolveFile }),
       ...Subgraph.validateDescription(manifest, { resolveFile }),
-      ...Subgraph.validateEthereumContractHandlers(manifest)
-      ...Subgraph.validateTransactionFunctions(manifest, { resolveFile })
+      ...Subgraph.validateEthereumContractHandlers(manifest),
+      ...Subgraph.validateCallFunctions(manifest, { resolveFile })
     )
 
     if (errors.size > 0) {
