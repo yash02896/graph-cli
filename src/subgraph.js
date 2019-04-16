@@ -218,9 +218,9 @@ ${abiEvents
                       .sort()
                       .map(event => `- ${event}`)
                       .join('\n')}`,
-                  })
+                  }),
                 ),
-          errors
+          errors,
         )
       }, immutable.List())
   }
@@ -264,17 +264,15 @@ ${abiEvents
                   immutable.fromJS({
                     path: [...path, index],
                     message: `\
-Call function with signature '${manifestFunction}' not present in ABI '${
-                      abi.name
-                    }'.
+Call function with signature '${manifestFunction}' not present in ABI '${abi.name}'.
 Available call functions:
 ${abiFunctions
                       .sort()
                       .map(tx => `- ${tx}`)
                       .join('\n')}`,
-                  })
+                  }),
                 ),
-          errors
+          errors,
         )
       }, immutable.List())
   }
@@ -303,9 +301,9 @@ Please replace it with a link to your subgraph source code.`,
 The description is still the one from the example subgraph.
 Please update it to tell users more about your subgraph.`,
           }),
-      )
+        )
   }
-    
+
   static validateEthereumContractHandlers(manifest) {
     return manifest
       .get('dataSources')
@@ -314,20 +312,20 @@ Please update it to tell users more about your subgraph.`,
         let path = ['dataSources', dataSourceIndex, 'mapping']
 
         let mapping = dataSource.get('mapping')
-        let blockHandler = mapping.get('blockHandler', undefined)
+        let blockHandlers = mapping.get('blockHandlers', immutable.List())
         let callHandlers = mapping.get('callHandlers', immutable.List())
         let eventHandlers = mapping.get('eventHandlers', immutable.List())
 
-        return blockHandler === undefined &&
+        return blockHandlers.isEmpty() &&
           callHandlers.isEmpty() &&
           eventHandlers.isEmpty()
           ? errors.push(
               immutable.fromJS({
                 path: path,
                 message: `\
-Mapping has no blockHandler, callHandlers or eventHandlers.
+Mapping has no blockHandlers, callHandlers or eventHandlers.
 At least one such handler must be defined.`,
-              })
+              }),
             )
           : errors
       }, immutable.List())
@@ -364,7 +362,7 @@ At least one such handler must be defined.`,
       ...Subgraph.validateRepository(manifest, { resolveFile }),
       ...Subgraph.validateDescription(manifest, { resolveFile }),
       ...Subgraph.validateEthereumContractHandlers(manifest),
-      ...Subgraph.validateCallFunctions(manifest, { resolveFile })
+      ...Subgraph.validateCallFunctions(manifest, { resolveFile }),
     )
 
     if (errors.size > 0) {
