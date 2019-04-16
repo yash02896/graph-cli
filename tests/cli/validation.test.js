@@ -74,15 +74,20 @@ describe('Validation', () => {
       exitCode: 0,
     },
   )
-  cliTest('Entity field arguments', ['codegen'], 'validation/entity-field-args', {
-    exitCode: 1,
-  })
+  cliTest(
+    'Entity field arguments',
+    ['codegen', '--skip-migrations'],
+    'validation/entity-field-args',
+    {
+      exitCode: 1,
+    },
+  )
   cliTest(
     'Ethereum contract data source without handlers',
-    ['codegen'],
+    ['codegen', '--skip-migrations'],
     'validation/ethereum-contract-without-handlers',
     {
       exitCode: 1,
-    }
+    },
   )
 })
