@@ -1353,10 +1353,9 @@ diff-sequences@^24.3.0:
   resolved "https://registry.npmjs.org/diff-sequences/-/diff-sequences-24.3.0.tgz#0f20e8a1df1abddaf4d9c226680952e64118b975"
   integrity sha512-xLqpez+Zj9GKSnPWS0WZw1igGocZ+uua8+y+5dDNTT934N3QuY1sp2LkHzwiaYQGz60hMq0pjAshdeXm5VUOEw==
 
-docker-compose@^0.16.0:
-  version "0.16.0"
-  resolved "https://registry.npmjs.org/docker-compose/-/docker-compose-0.16.0.tgz#729df15c15a190a7cf076b2707c1b3c08c62e0ca"
-  integrity sha512-Sbj8UVmO+HsJo54CB6QeoB+x0vMwhQ3GXZyzjPKZTqBpVPXjYLZnCmGNCBC4aFTNZi5zgW2mXbL8aBS0kOmxVw==
+"docker-compose@https://github.com/jannis/docker-compose#jannis/exit-code":
+  version "0.16.2"
+  resolved "https://github.com/jannis/docker-compose#1a0c9af4a6867619ec28b68e5bf79c525d8635bf"
   dependencies:
     winston "^2.3.1"
 
