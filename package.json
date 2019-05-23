@@ -7,7 +7,7 @@
     "chalk": "^2.4.1",
     "chokidar": "^2.0.4",
     "debug": "^3.1.0",
-    "docker-compose": "https://github.com/jannis/docker-compose#jannis/exit-code",
+    "docker-compose": "^0.17.2",
     "dockerode": "^2.5.8",
     "fs-extra": "^7.0.1",
     "glob": "^7.1.2",
