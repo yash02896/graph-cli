@@ -45,7 +45,7 @@ const withSpinner = async (text, errorText, warningText, f) => {
       return result
     }
   } catch (e) {
-    spinner.fail(`${errorText}: ${e.message}`)
+    spinner.fail(`${errorText}: ${e}`)
     throw e
   }
 }
