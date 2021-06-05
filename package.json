@@ -31,16 +31,22 @@
     "graph": "bin/graph"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "eslint": "^7.29.0",
     "jest": "^26.0.0",
     "spawn-command": "^0.0.2-1",
     "strip-ansi": "^6.0.0",
-    "tern": "^0.24.0"
+    "tern": "^0.24.0",
+    "typescript": "^4.3.2"
   },
   "scripts": {
+    "format": "prettier --write src/**/*.ts src/**/**/*.ts",
+    "lint": "eslint . --ext .ts,.tsx",
+    "prepare": "rm -rf dist && yarn format && yarn lint && tsc",
     "test": "jest --verbose",
-    "test:init": "jest tests/cli/init.test.js --verbose",
-    "test:validation": "jest tests/cli/validation.test.js --verbose",
+    "test:init": "jest tests/cli/init.test.ts --verbose",
+    "test:validation": "jest tests/cli/validation.test.ts --verbose",
     "release:patch": "npm version patch && npm publish && git push origin master && git push --tags",
     "release:minor": "npm version minor && npm publish && git push origin master && git push --tags"
   }

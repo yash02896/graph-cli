@@ -83,7 +83,7 @@ module.exports = {
   // notifyMode: "always",
 
   // A preset that is used as a base for Jest's configuration
-  // preset: null,
+  preset: 'ts-jest',
 
   // Run tests from one or more projects
   // projects: null,
@@ -133,10 +133,10 @@ module.exports = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  testMatch: ['**/?(*.)+(spec|test).js?(x)'],
+  testMatch: ['**/?(*.)+(spec|test).ts?(x)'],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  testPathIgnorePatterns: ['/src/commands/test.js', '/node_modules/'],
+  testPathIgnorePatterns: ['/src/commands/test.ts', '/node_modules/', '/dist/'],
 
   // The regexp pattern Jest uses to detect test files
   // testRegex: "",
