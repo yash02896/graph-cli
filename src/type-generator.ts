@@ -377,7 +377,6 @@ module.exports = class TypeGenerator {
   }
 
   async watchAndGenerateTypes() {
-    const generator = this
     let spinner
 
     // Create watcher and generate types once and then on every change to a watched file
@@ -387,10 +386,10 @@ module.exports = class TypeGenerator {
         if (changedFile !== undefined) {
           spinner.info(`File change detected: ${this.displayPath(changedFile)}\n`)
         }
-        await generator.generateTypes()
+        await this.generateTypes()
         spinner.start()
       },
-      onCollectFiles: async () => await generator.getFilesToWatch(),
+      onCollectFiles: async () => await this.getFilesToWatch(),
       onError: error => {
         spinner.stop()
         toolbox.print.error(`${error}\n`)
