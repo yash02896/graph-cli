@@ -139,6 +139,7 @@ const processInitForm = async (
             } else {
               abiFromEtherscan = await loadAbiFromEtherscan(network, value)
             }
+            // eslint-disable-next-line no-empty
           } catch (e) {}
         }
         return value
