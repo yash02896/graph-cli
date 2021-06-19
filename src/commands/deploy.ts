@@ -49,6 +49,7 @@ module.exports = {
 
     let subgraphName, manifest
     try {
+      // eslint-disable-next-line @typescript-eslint/no-extra-semi
       ;[subgraphName, manifest] = fixParameters(toolbox.parameters, {
         h,
         help,

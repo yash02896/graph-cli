@@ -31,6 +31,7 @@ module.exports = {
 
     let manifest
     try {
+      // eslint-disable-next-line @typescript-eslint/no-extra-semi
       ;[manifest] = fixParameters(toolbox.parameters, {
         h,
         help,
