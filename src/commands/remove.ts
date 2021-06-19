@@ -1,8 +1,8 @@
-const URL = require('url').URL
-const chalk = require('chalk')
-const { validateNodeUrl } = require('../command-helpers/node')
-const { identifyAccessToken } = require('../command-helpers/auth')
-const { createJsonRpcClient } = require('../command-helpers/jsonrpc')
+import { URL } from 'url'
+import chalk from 'chalk'
+import { validateNodeUrl } from '../command-helpers/node'
+import { identifyAccessToken } from '../command-helpers/auth'
+import { createJsonRpcClient } from '../command-helpers/jsonrpc'
 
 const HELP = `
 ${chalk.bold('graph remove')} ${chalk.dim('[options]')} ${chalk.bold('<subgraph-name>')}

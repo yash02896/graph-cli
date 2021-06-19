@@ -1,18 +1,18 @@
-const chalk = require('chalk')
-const fetch = require('node-fetch')
-const immutable = require('immutable')
-const os = require('os')
-const path = require('path')
-const toolbox = require('gluegun/toolbox')
+import chalk from 'chalk'
+import fetch from 'node-fetch'
+import immutable from 'immutable'
+import os from 'os'
+import path from 'path'
+import toolbox from 'gluegun/toolbox'
 
-const {
+import {
   getSubgraphBasename,
   validateSubgraphName,
-} = require('../command-helpers/subgraph')
-const { withSpinner, step } = require('../command-helpers/spinner')
-const { fixParameters } = require('../command-helpers/gluegun')
-const { abiEvents, generateScaffold, writeScaffold } = require('../scaffold')
-const ABI = require('../abi')
+} from '../command-helpers/subgraph'
+import { withSpinner, step } from '../command-helpers/spinner'
+import { fixParameters } from '../command-helpers/gluegun'
+import { abiEvents, generateScaffold, writeScaffold } from '../scaffold'
+import ABI from '../abi'
 
 const HELP = `
 ${chalk.bold('graph init')} [options] [subgraph-name] [directory]

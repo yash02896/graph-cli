@@ -1,14 +1,15 @@
-const fs = require('fs-extra')
-const path = require('path')
-const prettier = require('prettier')
-const pkginfo = require('pkginfo')(module)
+import fs from 'fs-extra'
+import path from 'path'
+import prettier from 'prettier'
+import pkginfo from 'pkginfo'
+const pkginfoWithModule = pkginfo(module)
 
-const { getSubgraphBasename } = require('./command-helpers/subgraph')
-const { step } = require('./command-helpers/spinner')
-const { ascTypeForEthereum, valueTypeForAsc } = require('./codegen/types')
-const ABI = require('./abi')
-const AbiCodeGenerator = require('./codegen/abi')
-const util = require('./codegen/util')
+import { getSubgraphBasename } from './command-helpers/subgraph'
+import { step } from './command-helpers/spinner'
+import { ascTypeForEthereum, valueTypeForAsc } from './codegen/types'
+import ABI from './abi'
+import AbiCodeGenerator from './codegen/abi'
+import util from './codegen/util'
 
 const abiEvents = abi =>
   util.disambiguateNames({

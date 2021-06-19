@@ -1,7 +1,7 @@
-const chalk = require('chalk')
+import chalk from 'chalk'
 
-const TypeGenerator = require('../type-generator')
-const { fixParameters } = require('../command-helpers/gluegun')
+import TypeGenerator from '../type-generator'
+import { fixParameters } from '../command-helpers/gluegun'
 
 const HELP = `
 ${chalk.bold('graph codegen')} [options] ${chalk.bold('[<subgraph-manifest>]')}

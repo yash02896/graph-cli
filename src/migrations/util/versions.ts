@@ -1,6 +1,6 @@
-const path = require('path')
-const fs = require('fs-extra')
-const yaml = require('js-yaml')
+import path from 'path'
+import fs from 'fs-extra'
+import yaml from 'js-yaml'
 
 const getGraphTsVersion = sourceDir => {
   let pkgJsonFile = path.join(

@@ -1,7 +1,7 @@
-const URL = require('url').URL
-const ipfsHttpClient = require('ipfs-http-client')
-const toolbox = require('gluegun/toolbox')
-const Compiler = require('../compiler')
+import { URL } from 'url'
+import ipfsHttpClient from 'ipfs-http-client'
+import toolbox from 'gluegun/toolbox'
+import Compiler from '../compiler'
 
 // Helper function to construct a subgraph compiler
 const createCompiler = (manifest, { ipfs, outputDir, outputFormat, skipMigrations }) => {

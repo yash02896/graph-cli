@@ -1,8 +1,8 @@
-const fs = require('fs-extra')
-const immutable = require('immutable')
-const path = require('path')
+import fs from 'fs-extra'
+import immutable from 'immutable'
+import path from 'path'
 
-const AbiCodeGenerator = require('./codegen/abi')
+import AbiCodeGenerator from './codegen/abi'
 
 const TUPLE_ARRAY_PATTERN = /^tuple\[([0-9]*)\]$/
 

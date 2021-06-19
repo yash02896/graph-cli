@@ -1,5 +1,5 @@
-const toolbox = require('gluegun/toolbox')
-const { normalizeNodeUrl } = require('./node')
+import toolbox from 'gluegun/toolbox'
+import { normalizeNodeUrl } from './node'
 
 // keytar is listed as an optional dependency in package.json and
 // dynamically required in this function

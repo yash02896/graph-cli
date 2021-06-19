@@ -1,17 +1,17 @@
-const asc = require('assemblyscript/cli/asc')
-const chalk = require('chalk')
-const crypto = require('crypto')
-const fs = require('fs-extra')
-const immutable = require('immutable')
-const path = require('path')
-const yaml = require('js-yaml')
-const toolbox = require('gluegun/toolbox')
+import asc from 'assemblyscript/cli/asc'
+import chalk from 'chalk'
+import crypto from 'crypto'
+import fs from 'fs-extra'
+import immutable from 'immutable'
+import path from 'path'
+import yaml from 'js-yaml'
+import toolbox from 'gluegun/toolbox'
 
-const { step, withSpinner } = require('./command-helpers/spinner')
-const Subgraph = require('./subgraph')
-const Watcher = require('./watcher')
-const ABI = require('./abi')
-const { applyMigrations } = require('./migrations')
+import { step, withSpinner } from './command-helpers/spinner'
+import Subgraph from './subgraph'
+import Watcher from './watcher'
+import ABI from './abi'
+import { applyMigrations } from './migrations'
 
 class Compiler {
   constructor(options) {

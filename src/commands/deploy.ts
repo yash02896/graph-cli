@@ -1,13 +1,13 @@
-const URL = require('url').URL
-const chalk = require('chalk')
+import { URL } from 'url'
+import chalk from 'chalk'
 
-const { identifyAccessToken } = require('../command-helpers/auth')
-const { createCompiler } = require('../command-helpers/compiler')
-const { fixParameters } = require('../command-helpers/gluegun')
-const { createJsonRpcClient } = require('../command-helpers/jsonrpc')
-const { validateNodeUrl } = require('../command-helpers/node')
-const { withSpinner } = require('../command-helpers/spinner')
-const { validateSubgraphName } = require('../command-helpers/subgraph')
+import { identifyAccessToken } from '../command-helpers/auth'
+import { createCompiler } from '../command-helpers/compiler'
+import { fixParameters } from '../command-helpers/gluegun'
+import { createJsonRpcClient } from '../command-helpers/jsonrpc'
+import { validateNodeUrl } from '../command-helpers/node'
+import { withSpinner } from '../command-helpers/spinner'
+import { validateSubgraphName } from '../command-helpers/subgraph'
 
 const HELP = `
 ${chalk.bold('graph deploy')} [options] ${chalk.bold('<subgraph-name>')} ${chalk.bold(

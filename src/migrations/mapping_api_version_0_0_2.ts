@@ -1,7 +1,7 @@
-const semver = require('semver')
-const toolbox = require('gluegun/toolbox')
-const { loadManifest } = require('./util/load-manifest')
-const { getGraphTsVersion } = require('./util/versions')
+import semver from 'semver'
+import toolbox from 'gluegun/toolbox'
+import { loadManifest } from './util/load-manifest'
+import { getGraphTsVersion } from './util/versions'
 
 // If any of the manifest apiVersions are 0.0.2, replace them with 0.0.3
 module.exports = {

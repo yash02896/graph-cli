@@ -1,11 +1,11 @@
-let fs = require('fs-extra')
-let immutable = require('immutable')
-let path = require('path')
-let yaml = require('yaml')
-let { strOptions } = require('yaml/types')
-let graphql = require('graphql/language')
-let validation = require('./validation')
-let ABI = require('./abi')
+import fs from 'fs-extra'
+import immutable from 'immutable'
+import path from 'path'
+import yaml from 'yaml'
+import { strOptions } from 'yaml/types'
+import graphql from 'graphql/language'
+import validation from './validation'
+import ABI from './abi'
 
 const throwCombinedError = (filename, errors) => {
   throw new Error(
@@ -424,6 +424,7 @@ More than one template named '${name}', template names must be unique.`,
     let data = null
 
     if(filename.match(/.js$/)) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       data = require(path.resolve(filename))
     }
     else {

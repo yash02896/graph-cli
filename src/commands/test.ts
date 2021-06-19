@@ -1,15 +1,15 @@
-const chalk = require('chalk')
-const compose = require('docker-compose')
-const http = require('http')
-const net = require('net')
-const tmp = require('tmp')
-const Docker = require('dockerode')
-const path = require('path')
-const stripAnsi = require('strip-ansi')
-const spawn = require('child_process').spawn
+import chalk from 'chalk'
+import compose from 'docker-compose'
+import http from 'http'
+import net from 'net'
+import tmp from 'tmp'
+import Docker from 'dockerode'
+import path from 'path'
+import stripAnsi from 'strip-ansi'
+import { spawn } from 'child_process'
 
-const { fixParameters } = require('../command-helpers/gluegun')
-const { step, withSpinner } = require('../command-helpers/spinner')
+import { fixParameters } from '../command-helpers/gluegun'
+import { step, withSpinner } from '../command-helpers/spinner'
 
 // Clean up temporary files even when an uncaught exception occurs
 tmp.setGracefulCleanup()

@@ -1,4 +1,4 @@
-const { withSpinner, step } = require('./command-helpers/spinner')
+import { withSpinner, step } from './command-helpers/spinner'
 
 const MIGRATIONS = [
   require('./migrations/mapping_api_version_0_0_1'),

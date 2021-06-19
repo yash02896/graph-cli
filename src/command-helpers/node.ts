@@ -1,4 +1,4 @@
-const URL = require('url').URL
+import { URL } from 'url'
 
 const validateNodeUrl = node => new URL(node)
 

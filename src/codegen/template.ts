@@ -1,6 +1,6 @@
-const immutable = require('immutable')
+import immutable from 'immutable'
 
-const tsCodegen = require('./typescript')
+import tsCodegen from './typescript'
 
 module.exports = class DataSourceTemplateCodeGenerator {
   constructor(template) {

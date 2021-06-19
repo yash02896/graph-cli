@@ -1,6 +1,6 @@
-const chalk = require('chalk')
-const { validateNodeUrl, normalizeNodeUrl } = require('../command-helpers/node')
-const { saveAccessToken } = require('../command-helpers/auth')
+import chalk from 'chalk'
+import { validateNodeUrl, normalizeNodeUrl } from '../command-helpers/node'
+import { saveAccessToken } from '../command-helpers/auth'
 
 const HELP = `
 ${chalk.bold('graph auth')} [options] ${chalk.bold('<node>')} ${chalk.bold(

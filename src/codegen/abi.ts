@@ -1,9 +1,9 @@
-const immutable = require('immutable')
+import immutable from 'immutable'
 
-const tsCodegen = require('./typescript')
-const typesCodegen = require('./types')
-const util = require('./util')
-const ABI = require('../abi')
+import tsCodegen from './typescript'
+import typesCodegen from './types'
+import util from './util'
+import ABI from '../abi'
 
 module.exports = class AbiCodeGenerator {
   constructor(abi) {

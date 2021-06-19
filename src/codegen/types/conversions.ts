@@ -1,4 +1,4 @@
-const immutable = require('immutable')
+import immutable from 'immutable'
 
 /**
  * ethereum.Value -> AssemblyScript conversions

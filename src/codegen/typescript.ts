@@ -1,5 +1,4 @@
-let immutable = require('immutable')
-let Map = immutable.Map
+import { Map } from 'immutable'
 
 class Param {
   constructor(name, type) {

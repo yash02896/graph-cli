@@ -1,11 +1,11 @@
-const ABI = require('./abi')
-const immutable = require('immutable')
-const {
+import ABI from './abi'
+import immutable from 'immutable'
+import {
   generateEventFieldAssignments,
   generateManifest,
   generateMapping,
   generateSchema,
-} = require('./scaffold')
+} from './scaffold'
 
 const TEST_EVENT = {
   name: 'ExampleEvent',

@@ -1,7 +1,7 @@
-const chalk = require('chalk')
+import chalk from 'chalk'
 
-const { createCompiler } = require('../command-helpers/compiler')
-const { fixParameters } = require('../command-helpers/gluegun')
+import { createCompiler } from '../command-helpers/compiler'
+import { fixParameters } from '../command-helpers/gluegun'
 
 const HELP = `
 ${chalk.bold('graph build')} [options] ${chalk.bold('[<subgraph-manifest>]')}

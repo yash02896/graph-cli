@@ -1,9 +1,9 @@
-const fs = require('fs-extra')
-const semver = require('semver')
-const toolbox = require('gluegun/toolbox')
-const yaml = require('js-yaml')
-const { getGraphTsVersion } = require('./util/versions')
-const { loadManifest } = require('./util/load-manifest')
+import fs from 'fs-extra'
+import semver from 'semver'
+import toolbox from 'gluegun/toolbox'
+import yaml from 'js-yaml'
+import { getGraphTsVersion } from './util/versions'
+import { loadManifest } from './util/load-manifest'
 
 // If any of the manifest apiVersions are 0.0.1, replace them with 0.0.2
 module.exports = {

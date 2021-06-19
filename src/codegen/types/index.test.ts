@@ -1,4 +1,4 @@
-const codegen = require('.')
+import codegen from '.'
 
 describe('ethereum.Value -> AssemblyScript', () => {
   // Scalar values

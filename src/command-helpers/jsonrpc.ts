@@ -1,5 +1,5 @@
-const jayson = require('jayson')
-const toolbox = require('gluegun/toolbox')
+import jayson from 'jayson'
+import toolbox from 'gluegun/toolbox'
 
 const createJsonRpcClient = url => {
   let params = {

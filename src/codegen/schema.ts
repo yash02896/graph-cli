@@ -1,9 +1,7 @@
-const immutable = require('immutable')
+import { List } from 'immutable'
 
-const tsCodegen = require('./typescript')
-const typesCodegen = require('./types')
-
-const List = immutable.List
+import tsCodegen from './typescript'
+import typesCodegen from './types'
 
 module.exports = class SchemaCodeGenerator {
   constructor(schema) {

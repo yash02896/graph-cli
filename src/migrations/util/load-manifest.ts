@@ -1,6 +1,6 @@
-const fs = require('fs-extra')
-const path = require('path')
-const yaml = require('js-yaml')
+import fs from 'fs-extra'
+import path from 'path'
+import yaml from 'js-yaml'
 
 function loadManifest(manifestFile) {
   if(manifestFile.match(/.js$/)) {

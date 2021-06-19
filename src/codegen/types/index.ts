@@ -1,6 +1,6 @@
-const immutable = require('immutable')
+import immutable from 'immutable'
 
-const TYPE_CONVERSIONS = require('./conversions')
+import TYPE_CONVERSIONS from './conversions'
 
 // Conversion utilities
 

@@ -1,5 +1,5 @@
-const chokidar = require('chokidar')
-const path = require('path')
+import chokidar from 'chokidar'
+import path from 'path'
 
 module.exports = class Watcher {
   constructor(options) {

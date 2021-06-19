@@ -1,4 +1,4 @@
-const { disambiguateNames, unrollTuple } = require('./util')
+import { disambiguateNames, unrollTuple } from './util'
 
 describe('Codegen utilities', () => {
   test('Name disambiguation', () => {

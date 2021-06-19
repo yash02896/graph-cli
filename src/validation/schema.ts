@@ -1,6 +1,6 @@
-const fs = require('fs')
-const graphql = require('graphql/language')
-const immutable = require('immutable')
+import fs from 'fs'
+import graphql from 'graphql/language'
+import immutable from 'immutable'
 
 const List = immutable.List
 const Set = immutable.Set
