@@ -2,15 +2,15 @@ import path from 'path'
 import fs from 'fs-extra'
 
 const getGraphTsVersion = sourceDir => {
-  let pkgJsonFile = path.join(
+  const pkgJsonFile = path.join(
     sourceDir,
     'node_modules',
     '@graphprotocol',
     'graph-ts',
     'package.json',
   )
-  let data = fs.readFileSync(pkgJsonFile)
-  let jsonData = JSON.parse(data)
+  const data = fs.readFileSync(pkgJsonFile)
+  const jsonData = JSON.parse(data)
   return jsonData.version
 }
 

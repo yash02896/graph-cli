@@ -2,7 +2,7 @@ import jayson from 'jayson'
 import toolbox from 'gluegun/toolbox'
 
 const createJsonRpcClient = url => {
-  let params = {
+  const params = {
     auth: url.auth,
     host: url.hostname,
     port: url.port,

@@ -40,7 +40,7 @@ const processInitForm = async (
   toolbox,
   {abi, address, allowSimpleName, directory, fromExample, network, subgraphName, contractName},
 ) => {
-  let networkChoices = [
+  const networkChoices = [
     'mainnet',
     'kovan',
     'rinkeby',
@@ -56,12 +56,12 @@ const processInitForm = async (
     'clover',
     'arbitrum-testnet-v5',
   ]
-  let addressPattern = /^(0x)?[0-9a-fA-F]{40}$/
+  const addressPattern = /^(0x)?[0-9a-fA-F]{40}$/
 
   let abiFromEtherscan = undefined
   let abiFromFile = undefined
 
-  let questions = [
+  const questions = [
     {
       type: 'input',
       name: 'subgraphName',
@@ -178,7 +178,7 @@ const processInitForm = async (
   ]
 
   try {
-    let answers = await toolbox.prompt.ask(questions)
+    const answers = await toolbox.prompt.ask(questions)
     return { ...answers, abi: abiFromEtherscan || abiFromFile }
   } catch (e) {
     return undefined
@@ -191,12 +191,13 @@ const loadAbiFromBlockScout = async (network, address) =>
     `Failed to fetch ABI from BlockScout`,
     `Warnings while fetching ABI from BlockScout`,
     async _spinner => {
-      let result = await fetch(
-        `https://blockscout.com/${
-          network.replace('-', '/')
-        }/api?module=contract&action=getabi&address=${address}`,
+      const result = await fetch(
+        `https://blockscout.com/${network.replace(
+          '-',
+          '/',
+        )}/api?module=contract&action=getabi&address=${address}`,
       )
-      let json = await result.json()
+      const json = await result.json()
 
       // BlockScout returns a JSON object that has a `status`, a `message` and
       // a `result` field. The `status` is '0' in case of errors and '1' in
@@ -215,12 +216,12 @@ const loadAbiFromEtherscan = async (network, address) =>
     `Failed to fetch ABI from Etherscan`,
     `Warnings while fetching ABI from Etherscan`,
     async _spinner => {
-      let result = await fetch(
+      const result = await fetch(
         `https://${
           network === 'mainnet' ? 'api' : `api-${network}`
         }.etherscan.io/api?module=contract&action=getabi&address=${address}`,
       )
-      let json = await result.json()
+      const json = await result.json()
 
       // Etherscan returns a JSON object that has a `status`, a `message` and
       // a `result` field. The `status` is '0' in case of errors and '1' in
@@ -234,7 +235,7 @@ const loadAbiFromEtherscan = async (network, address) =>
   )
 
 const loadAbiFromFile = async filename => {
-  let exists = await toolbox.filesystem.exists(filename)
+  const exists = await toolbox.filesystem.exists(filename)
 
   if (!exists) {
     throw Error('File does not exist.')
@@ -254,20 +255,21 @@ module.exports = {
   },
   run: async toolbox => {
     // Obtain tools
-    let { print, system } = toolbox
+    const { print, system } = toolbox
 
     // Read CLI parameters
-    let {
-      abi,
+    const {
       allowSimpleName,
-      fromContract,
       contractName,
+      fromContract,
       fromExample,
       h,
       help,
       indexEvents,
       network,
     } = toolbox.parameters.options
+
+    let { abi } = toolbox.parameters.options
 
     if (fromContract && fromExample) {
       print.error(`Only one of --from-example and --from-contract can be used at a time.`)
@@ -297,7 +299,7 @@ module.exports = {
     }
 
     // Detect git
-    let git = await system.which('git')
+    const git = await system.which('git')
     if (git === null) {
       print.error(
         `Git was not found on your system. Please install 'git' so it is in $PATH.`,
@@ -307,8 +309,8 @@ module.exports = {
     }
 
     // Detect Yarn and/or NPM
-    let yarn = await system.which('yarn')
-    let npm = await system.which('npm')
+    const yarn = await system.which('yarn')
+    const npm = await system.which('npm')
     if (!yarn && !npm) {
       print.error(
         `Neither Yarn nor NPM were found on your system. Please install one of them.`,
@@ -317,7 +319,7 @@ module.exports = {
       return
     }
 
-    let commands = {
+    const commands = {
       install: yarn ? 'yarn' : 'npm install',
       codegen: yarn ? 'yarn codegen' : 'npm run codegen',
       deploy: yarn ? 'yarn deploy' : 'npm run deploy',
@@ -374,7 +376,7 @@ module.exports = {
     }
 
     // Otherwise, take the user through the interactive form
-    let inputs = await processInitForm(toolbox, {
+    const inputs = await processInitForm(toolbox, {
       abi,
       allowSimpleName,
       directory,
@@ -444,7 +446,7 @@ const initRepository = async (toolbox, directory) =>
     async _spinner => {
       // Remove .git dir in --from-example mode; in --from-contract, we're
       // starting from an empty directory
-      let gitDir = path.join(directory, '.git')
+      const gitDir = path.join(directory, '.git')
       if (toolbox.filesystem.exists(gitDir)) {
         await toolbox.filesystem.remove(gitDir)
       }
@@ -480,9 +482,9 @@ const runCodegen = async (toolbox, directory, codegenCommand) =>
   )
 
 const printNextSteps = (toolbox, { subgraphName, directory }, { commands }) => {
-  let { print } = toolbox
+  const { print } = toolbox
 
-  let relativeDir = path.relative(process.cwd(), directory)
+  const relativeDir = path.relative(process.cwd(), directory)
 
   // Print instructions
   print.success(
@@ -511,7 +513,7 @@ const initSubgraphFromExample = async (
   { allowSimpleName, subgraphName, directory },
   { commands },
 ) => {
-  let { filesystem, print, system } = toolbox
+  const { filesystem, print, system } = toolbox
 
   // Fail if the subgraph name is invalid
   if (!revalidateSubgraphName(toolbox, subgraphName, { allowSimpleName })) {
@@ -527,7 +529,7 @@ const initSubgraphFromExample = async (
   }
 
   // Clone the example subgraph repository
-  let cloned = await withSpinner(
+  const cloned = await withSpinner(
     `Cloning example subgraph`,
     `Failed to clone example subgraph`,
     `Warnings while cloning example subgraph`,
@@ -544,15 +546,15 @@ const initSubgraphFromExample = async (
   }
 
   // Update package.json to match the subgraph name
-  let prepared = await withSpinner(
+  const prepared = await withSpinner(
     `Update subgraph name and commands in package.json`,
     `Failed to update subgraph name and commands in package.json`,
     `Warnings while updating subgraph name and commands in package.json`,
     async _spinner => {
       try {
         // Load package.json
-        let pkgJsonFilename = filesystem.path(directory, 'package.json')
-        let pkgJson = await filesystem.read(pkgJsonFilename, 'json')
+        const pkgJsonFilename = filesystem.path(directory, 'package.json')
+        const pkgJson = await filesystem.read(pkgJsonFilename, 'json')
 
         pkgJson.name = getSubgraphBasename(subgraphName)
         Object.keys(pkgJson.scripts).forEach(name => {
@@ -577,21 +579,21 @@ const initSubgraphFromExample = async (
   }
 
   // Initialize a fresh Git repository
-  let repo = await initRepository(toolbox, directory)
+  const repo = await initRepository(toolbox, directory)
   if (repo !== true) {
     process.exitCode = 1
     return
   }
 
   // Install dependencies
-  let installed = await installDependencies(toolbox, directory, commands.install)
+  const installed = await installDependencies(toolbox, directory, commands.install)
   if (installed !== true) {
     process.exitCode = 1
     return
   }
 
   // Run code-generation
-  let codegen = await runCodegen(toolbox, directory, commands.codegen)
+  const codegen = await runCodegen(toolbox, directory, commands.codegen)
   if (codegen !== true) {
     process.exitCode = 1
     return
@@ -605,7 +607,7 @@ const initSubgraphFromContract = async (
   {allowSimpleName, subgraphName, directory, abi, network, address, indexEvents, contractName},
   { commands },
 ) => {
-  let { print } = toolbox
+  const { print } = toolbox
 
   // Fail if the subgraph name is invalid
   if (!revalidateSubgraphName(toolbox, subgraphName, { allowSimpleName })) {
@@ -628,12 +630,12 @@ const initSubgraphFromContract = async (
   }
 
   // Scaffold subgraph from ABI
-  let scaffold = await withSpinner(
+  const scaffold = await withSpinner(
     `Create subgraph scaffold`,
     `Failed to create subgraph scaffold`,
     `Warnings while creating subgraph scaffold`,
     async spinner => {
-      let scaffold = await generateScaffold(
+      const scaffold = await generateScaffold(
         {
           subgraphName,
           abi,
@@ -654,21 +656,21 @@ const initSubgraphFromContract = async (
   }
 
   // Initialize a fresh Git repository
-  let repo = await initRepository(toolbox, directory)
+  const repo = await initRepository(toolbox, directory)
   if (repo !== true) {
     process.exitCode = 1
     return
   }
 
   // Install dependencies
-  let installed = await installDependencies(toolbox, directory, commands.install)
+  const installed = await installDependencies(toolbox, directory, commands.install)
   if (installed !== true) {
     process.exitCode = 1
     return
   }
 
   // Run code-generation
-  let codegen = await runCodegen(toolbox, directory, commands.codegen)
+  const codegen = await runCodegen(toolbox, directory, commands.codegen)
   if (codegen !== true) {
     process.exitCode = 1
     return

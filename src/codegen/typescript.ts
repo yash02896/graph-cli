@@ -100,7 +100,7 @@ class NamedType {
   }
 
   isPrimitive() {
-    let primitives = [
+    const primitives = [
       'boolean',
       'u8',
       'i8',

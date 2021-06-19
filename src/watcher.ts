@@ -12,7 +12,7 @@ module.exports = class Watcher {
 
   async watch() {
     // Collect files to watch
-    let files = await this.onCollectFiles()
+    const files = await this.onCollectFiles()
 
     // Initialize watcher
     this.watcher = chokidar.watch(files, {
@@ -22,11 +22,11 @@ module.exports = class Watcher {
     })
 
     // Bind variables locally
-    let watcher = this.watcher
-    let onTrigger = this.onTrigger
-    let onCollectFiles = this.onCollectFiles
-    let onError = this.onError
-    let onReady = this.onReady
+    const watcher = this.watcher
+    const onTrigger = this.onTrigger
+    const onCollectFiles = this.onCollectFiles
+    const onError = this.onError
+    const onReady = this.onReady
 
     watcher.on('ready', async () => {
       // Notify listeners that we're watching
@@ -43,12 +43,12 @@ module.exports = class Watcher {
     watcher.on('all', async (eventType, file) => {
       try {
         // Collect watch all new files to watch
-        let newFiles = await onCollectFiles()
+        const newFiles = await onCollectFiles()
 
         // Collect watched files, if there are any
         let watchedFiles = []
 
-        let watched = watcher.getWatched()
+        const watched = watcher.getWatched()
         watchedFiles = Object.keys(watched).reduce(
           (files, dirname) =>
             watched[dirname].reduce((files, filename) => {
@@ -58,14 +58,14 @@ module.exports = class Watcher {
           []
         )
 
-        let diff = (xs, ys) => ({
+        const diff = (xs, ys) => ({
           added: ys.filter(y => xs.indexOf(y) < 0),
           removed: xs.filter(x => ys.indexOf(x) < 0),
         })
 
         // Diff previously watched files and new files; then remove and
         // add files from/to the watcher accordingly
-        let filesDiff = diff(watchedFiles, newFiles)
+        const filesDiff = diff(watchedFiles, newFiles)
         watcher.unwatch(filesDiff.removed)
         watcher.add(filesDiff.added)
 

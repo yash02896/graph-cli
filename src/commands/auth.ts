@@ -16,12 +16,12 @@ module.exports = {
   description: 'Sets the access token to use when deploying to a Graph node',
   run: async toolbox => {
     // Obtain tools
-    let { print } = toolbox
+    const { print } = toolbox
 
     // Read CLI parameters
-    let { h, help } = toolbox.parameters.options
-    let node = toolbox.parameters.first
-    let accessToken = toolbox.parameters.second
+    const { h, help } = toolbox.parameters.options
+    const node = toolbox.parameters.first
+    const accessToken = toolbox.parameters.second
 
     // Show help text if requested
     if (help || h) {

@@ -20,20 +20,23 @@ module.exports = {
   description: 'Builds a subgraph and (optionally) uploads it to IPFS',
   run: async toolbox => {
     // Obtain tools
-    let { filesystem, print } = toolbox
+    const { filesystem, print } = toolbox
 
     // Parse CLI parameters
-    let {
-      i,
+    const {
       h,
-      help,
-      ipfs,
+      i,
       o,
-      outputDir,
-      outputFormat,
       skipMigrations,
       t,
       w,
+    } = toolbox.parameters.options
+
+    let {
+      help,
+      ipfs,
+      outputDir,
+      outputFormat,
       watch,
     } = toolbox.parameters.options
 
@@ -73,7 +76,7 @@ module.exports = {
       return
     }
 
-    let compiler = createCompiler(manifest, {
+    const compiler = createCompiler(manifest, {
       ipfs,
       outputDir,
       outputFormat,
@@ -91,7 +94,7 @@ module.exports = {
     if (watch) {
       await compiler.watchAndCompile()
     } else {
-      let result = await compiler.compile()
+      const result = await compiler.compile()
       if (result === false) {
         process.exitCode = 1
       }

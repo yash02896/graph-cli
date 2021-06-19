@@ -14,7 +14,7 @@ You can bypass this check with --allow-simple-name.`)
 }
 
 const getSubgraphBasename = name => {
-  let segments = name.split('/', 2)
+  const segments = name.split('/', 2)
   return segments[segments.length - 1]
 }
 

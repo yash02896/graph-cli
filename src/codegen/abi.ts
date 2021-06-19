@@ -40,7 +40,7 @@ module.exports = class AbiCodeGenerator {
   }
 
   _generateCallTypes() {
-    let callFunctions = util.disambiguateNames({
+    const callFunctions = util.disambiguateNames({
       values: this.abi.callFunctions(),
       getName: fn =>
         fn.get('name') || (fn.get('type') === 'constructor' ? 'constructor' : 'default'),
@@ -49,13 +49,13 @@ module.exports = class AbiCodeGenerator {
 
     return callFunctions
       .map(fn => {
-        let fnAlias = fn.get('_alias')
-        let fnClassName = `${fnAlias.charAt(0).toUpperCase()}${fnAlias.slice(1)}Call`
-        let tupleClasses = []
+        const fnAlias = fn.get('_alias')
+        const fnClassName = `${fnAlias.charAt(0).toUpperCase()}${fnAlias.slice(1)}Call`
+        const tupleClasses = []
 
         // First, generate a class with the input getters
-        let inputsClassName = fnClassName + '__Inputs'
-        let inputsClass = tsCodegen.klass(inputsClassName, { export: true })
+        const inputsClassName = fnClassName + '__Inputs'
+        const inputsClass = tsCodegen.klass(inputsClassName, { export: true })
         inputsClass.addMember(tsCodegen.klassMember('_call', fnClassName))
         inputsClass.addMethod(
           tsCodegen.method(
@@ -74,7 +74,7 @@ module.exports = class AbiCodeGenerator {
             setName: (input, name) => input.set('name', name),
           })
           .forEach((input, index) => {
-            let callInput = this._generateInputOrOutput(
+            const callInput = this._generateInputOrOutput(
               input,
               index,
               fnClassName,
@@ -86,8 +86,8 @@ module.exports = class AbiCodeGenerator {
           })
 
         // Second, generate a class with the output getters
-        let outputsClassName = fnClassName + '__Outputs'
-        let outputsClass = tsCodegen.klass(outputsClassName, { export: true })
+        const outputsClassName = fnClassName + '__Outputs'
+        const outputsClass = tsCodegen.klass(outputsClassName, { export: true })
         outputsClass.addMember(tsCodegen.klassMember('_call', fnClassName))
         outputsClass.addMethod(
           tsCodegen.method(
@@ -106,7 +106,7 @@ module.exports = class AbiCodeGenerator {
             setName: (output, name) => output.set('name', name),
           })
           .forEach((output, index) => {
-            let callInput = this._generateInputOrOutput(
+            const callInput = this._generateInputOrOutput(
               output,
               index,
               fnClassName,
@@ -118,7 +118,7 @@ module.exports = class AbiCodeGenerator {
           })
 
         // Then, generate the event class itself
-        let klass = tsCodegen.klass(fnClassName, {
+        const klass = tsCodegen.klass(fnClassName, {
           export: true,
           extends: 'ethereum.Call',
         })
@@ -149,7 +149,7 @@ module.exports = class AbiCodeGenerator {
 
   _generateEventTypes() {
     // Enumerate events with duplicate names
-    let events = util.disambiguateNames({
+    const events = util.disambiguateNames({
       values: this.abi.data.filter(member => member.get('type') === 'event'),
       getName: event => event.get('name'),
       setName: (event, name) => event.set('_alias', name),
@@ -157,12 +157,12 @@ module.exports = class AbiCodeGenerator {
 
     return events
       .map(event => {
-        let eventClassName = event.get('_alias')
-        let tupleClasses = []
+        const eventClassName = event.get('_alias')
+        const tupleClasses = []
 
         // First, generate a class with the param getters
-        let paramsClassName = eventClassName + '__Params'
-        let paramsClass = tsCodegen.klass(paramsClassName, { export: true })
+        const paramsClassName = eventClassName + '__Params'
+        const paramsClass = tsCodegen.klass(paramsClassName, { export: true })
         paramsClass.addMember(tsCodegen.klassMember('_event', eventClassName))
         paramsClass.addMethod(
           tsCodegen.method(
@@ -174,7 +174,7 @@ module.exports = class AbiCodeGenerator {
         )
 
         // Enumerate inputs with duplicate names
-        let inputs = util.disambiguateNames({
+        const inputs = util.disambiguateNames({
           values: event.get('inputs'),
           getName: (input, index) => input.get('name') || `param${index}`,
           setName: (input, name) => input.set('name', name),
@@ -182,7 +182,7 @@ module.exports = class AbiCodeGenerator {
 
         inputs.forEach((input, index) => {
           // Generate getters and classes for event params
-          let paramObject = this._generateInputOrOutput(
+          const paramObject = this._generateInputOrOutput(
             input,
             index,
             eventClassName,
@@ -194,7 +194,7 @@ module.exports = class AbiCodeGenerator {
         })
 
         // Then, generate the event class itself
-        let klass = tsCodegen.klass(eventClassName, {
+        const klass = tsCodegen.klass(eventClassName, {
           export: true,
           extends: 'ethereum.Event',
         })
@@ -218,7 +218,7 @@ module.exports = class AbiCodeGenerator {
   _generateInputOrOutput(inputOrOutput, index, parentClass, parentType, parentField) {
     // Get name and type of the param, adjusting for indexed params and missing names
     let name = inputOrOutput.get('name')
-    let valueType =
+    const valueType =
       parentType === 'event' && inputOrOutput.get('indexed')
         ? this._indexedInputType(inputOrOutput.get('type'))
         : inputOrOutput.get('type')
@@ -260,18 +260,18 @@ module.exports = class AbiCodeGenerator {
   }
 
   _generateTupleType(inputOrOutput, index, parentClass, parentType, parentField) {
-    let type = inputOrOutput.get('type')
+    const type = inputOrOutput.get('type')
     let name = inputOrOutput.get('name')
     if (name === undefined || name === null || name === '') {
       name = parentType === 'event' ? `param${index}` : `value${index}`
     }
 
-    let tupleIdentifier = parentClass + tsCodegen.namedType(name).capitalize()
-    let tupleClassName = tupleIdentifier + 'Struct'
+    const tupleIdentifier = parentClass + tsCodegen.namedType(name).capitalize()
+    const tupleClassName = tupleIdentifier + 'Struct'
     let tupleClasses = []
 
     // Generate getter for parent class
-    let tupleGetter = tsCodegen.method(
+    const tupleGetter = tsCodegen.method(
       `get ${name}`,
       [],
       util.isTupleArrayType(type) ? `Array<${tupleClassName}>` : tupleClassName,
@@ -287,14 +287,14 @@ module.exports = class AbiCodeGenerator {
     )
 
     // Generate tuple class
-    let baseTupleClass = tsCodegen.klass(tupleClassName, {
+    const baseTupleClass = tsCodegen.klass(tupleClassName, {
       export: true,
       extends: 'ethereum.Tuple',
     })
 
     // Add param getters to tuple class and generate classes for each tuple parameter
     inputOrOutput.get('components').forEach((component, index) => {
-      let paramObject = this._generateInputOrOutput(
+      const paramObject = this._generateInputOrOutput(
         component,
         index,
         tupleIdentifier,
@@ -315,7 +315,7 @@ module.exports = class AbiCodeGenerator {
   }
 
   _generateSmartContractClass() {
-    let klass = tsCodegen.klass(this.abi.name, {
+    const klass = tsCodegen.klass(this.abi.name, {
       export: true,
       extends: 'ethereum.SmartContract',
     })
@@ -345,17 +345,17 @@ module.exports = class AbiCodeGenerator {
     })
 
     functions.forEach(member => {
-      let fnName = member.get('name')
-      let fnAlias = member.get('_alias')
-      let fnSignature = this.abi.functionSignature(member)
+      const fnName = member.get('name')
+      const fnAlias = member.get('_alias')
+      const fnSignature = this.abi.functionSignature(member)
 
       // Generate a type for the result of calling the function
       let returnType = undefined
       let simpleReturnType = true
-      let tupleResultParentType = this.abi.name + '__' + fnAlias + 'Result'
+      const tupleResultParentType = this.abi.name + '__' + fnAlias + 'Result'
 
       // Disambiguate outputs with duplicate names
-      let outputs = util.disambiguateNames({
+      const outputs = util.disambiguateNames({
         values: member.get('outputs', immutable.List()),
         getName: (input, index) => input.get('name') || `value${index}`,
         setName: (input, name) => input.set('name', name),
@@ -438,10 +438,10 @@ module.exports = class AbiCodeGenerator {
 
         returnType = tsCodegen.namedType(returnType.name)
       } else {
-        let type = outputs.get(0).get('type')
+        const type = outputs.get(0).get('type')
         if (util.containsTupleType(type)) {
           // Add the Tuple type to the types we'll create
-          let tuple = this._generateTupleType(
+          const tuple = this._generateTupleType(
             outputs.get(0),
             0,
             tupleResultParentType,
@@ -458,14 +458,14 @@ module.exports = class AbiCodeGenerator {
       }
 
       // Disambiguate inputs with duplicate names
-      let inputs = util.disambiguateNames({
+      const inputs = util.disambiguateNames({
         values: member.get('inputs', immutable.List()),
         getName: (input, index) => input.get('name') || `param${index}`,
         setName: (input, name) => input.set('name', name),
       })
 
       // Generate a type prefix to identify the Tuple inputs to a function
-      let tupleInputParentType = this.abi.name + '__' + fnAlias + 'Input'
+      const tupleInputParentType = this.abi.name + '__' + fnAlias + 'Input'
 
       // Create types for Tuple inputs
       inputs.forEach((input, index) => {
@@ -484,14 +484,14 @@ module.exports = class AbiCodeGenerator {
 
       // Generate and add a method that implements calling the function on
       // the smart contract
-      let params = inputs.map((input, index) =>
+      const params = inputs.map((input, index) =>
         tsCodegen.param(
           input.get('name'),
           this._getTupleParamType(input, index, tupleInputParentType),
         ),
       )
 
-      let superInputs = `
+      const superInputs = `
       '${fnName}',
       '${fnSignature}',
       [${
@@ -505,7 +505,7 @@ module.exports = class AbiCodeGenerator {
           : ''
       }]`
 
-      let methodCallBody = isTry =>
+      const methodCallBody = isTry =>
         `
         ${
           isTry
@@ -615,7 +615,7 @@ module.exports = class AbiCodeGenerator {
   }
 
   callableFunctions() {
-    let allowedMutability = ['view', 'pure', 'nonpayable', 'constant']
+    const allowedMutability = ['view', 'pure', 'nonpayable', 'constant']
     return this.abi.data.filter(
       member =>
         member.get('type') === 'function' &&

@@ -5,7 +5,7 @@ import TYPE_CONVERSIONS from './conversions'
 // Conversion utilities
 
 const conversionsForTypeSystems = (fromTypeSystem, toTypeSystem) => {
-  let conversions = TYPE_CONVERSIONS.getIn([fromTypeSystem, toTypeSystem])
+  const conversions = TYPE_CONVERSIONS.getIn([fromTypeSystem, toTypeSystem])
   if (conversions === undefined) {
     throw new Error(
       `Conversions from '${fromTypeSystem}' to '${toTypeSystem}' are not supported`,
@@ -29,9 +29,9 @@ const objectifyConversion = (fromTypeSystem, toTypeSystem, conversion) => {
 }
 
 const findConversionFromType = (fromTypeSystem, toTypeSystem, fromType) => {
-  let conversions = conversionsForTypeSystems(fromTypeSystem, toTypeSystem)
+  const conversions = conversionsForTypeSystems(fromTypeSystem, toTypeSystem)
 
-  let conversion = conversions.find(conversion =>
+  const conversion = conversions.find(conversion =>
     typeof conversion.get(0) === 'string'
       ? conversion.get(0) === fromType
       : fromType.match(conversion.get(0)),
@@ -48,9 +48,9 @@ const findConversionFromType = (fromTypeSystem, toTypeSystem, fromType) => {
 }
 
 const findConversionToType = (fromTypeSystem, toTypeSystem, toType) => {
-  let conversions = conversionsForTypeSystems(fromTypeSystem, toTypeSystem)
+  const conversions = conversionsForTypeSystems(fromTypeSystem, toTypeSystem)
 
-  let conversion = conversions.find(conversion =>
+  const conversion = conversions.find(conversion =>
     typeof conversion.get(1) === 'string'
       ? conversion.get(1) === toType
       : toType.match(conversion.get(1)),

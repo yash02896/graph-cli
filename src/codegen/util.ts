@@ -1,8 +1,8 @@
 const disambiguateNames = ({ values, getName, setName }) => {
-  let collisionCounter = new Map()
+  const collisionCounter = new Map()
   return values.map((value, index) => {
-    let name = getName(value, index)
-    let counter = collisionCounter.get(name)
+    const name = getName(value, index)
+    const counter = collisionCounter.get(name)
     if (counter === undefined) {
       collisionCounter.set(name, 1)
       return setName(value, name)
@@ -27,7 +27,7 @@ const isTupleArrayType = t => {
 
 const unrollTuple = ({ path, index: _index, value }) =>
   value.components.reduce((acc, component, index) => {
-    let name = component.name || `value${index}`
+    const name = component.name || `value${index}`
     return acc.concat(
       component.type === 'tuple'
         ? unrollTuple({

@@ -40,16 +40,16 @@ module.exports = class TypeGenerator {
           manifestFile: this.options.subgraphManifest,
         })
       }
-      let subgraph = await this.loadSubgraph()
-      let abis = await this.loadABIs(subgraph)
+      const subgraph = await this.loadSubgraph()
+      const abis = await this.loadABIs(subgraph)
       await this.generateTypesForABIs(abis)
 
       await this.generateTypesForDataSourceTemplates(subgraph)
 
-      let templateAbis = await this.loadDataSourceTemplateABIs(subgraph)
+      const templateAbis = await this.loadDataSourceTemplateABIs(subgraph)
       await this.generateTypesForDataSourceTemplateABIs(templateAbis)
 
-      let schema = await this.loadSchema(subgraph)
+      const schema = await this.loadSchema(subgraph)
       await this.generateTypesForSchema(schema)
 
       toolbox.print.success('\nTypes generated successfully\n')
@@ -117,7 +117,7 @@ module.exports = class TypeGenerator {
   _loadABI(dataSource, name, maybeRelativePath, spinner) {
     try {
       if (this.sourceDir) {
-        let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
+        const absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
         step(spinner, `Load contract ABI from`, this.displayPath(absolutePath))
         return { dataSource: dataSource, abi: ABI.load(name, absolutePath) }
       } else {
@@ -131,7 +131,7 @@ module.exports = class TypeGenerator {
   _loadDataSourceTemplateABI(template, name, maybeRelativePath, spinner) {
     try {
       if (this.sourceDir) {
-        let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
+        const absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
         step(
           spinner,
           `Load data source template ABI from`,
@@ -167,8 +167,8 @@ module.exports = class TypeGenerator {
         `${abi.abi.name} (${this.displayPath(abi.abi.file)})`,
       )
 
-      let codeGenerator = abi.abi.codeGenerator()
-      let code = prettier.format(
+      const codeGenerator = abi.abi.codeGenerator()
+      const code = prettier.format(
         [
           GENERATED_FILE_NOTE,
           ...codeGenerator.generateModuleImports(),
@@ -179,7 +179,7 @@ module.exports = class TypeGenerator {
         },
       )
 
-      let outputFile = path.join(
+      const outputFile = path.join(
         this.options.outputDir,
         abi.dataSource.get('name'),
         `${abi.abi.name}.ts`,
@@ -202,8 +202,8 @@ module.exports = class TypeGenerator {
         )})`,
       )
 
-      let codeGenerator = abi.abi.codeGenerator()
-      let code = prettier.format(
+      const codeGenerator = abi.abi.codeGenerator()
+      const code = prettier.format(
         [
           GENERATED_FILE_NOTE,
           ...codeGenerator.generateModuleImports(),
@@ -214,7 +214,7 @@ module.exports = class TypeGenerator {
         },
       )
 
-      let outputFile = path.join(
+      const outputFile = path.join(
         this.options.outputDir,
         'templates',
         abi.template.get('name'),
@@ -229,15 +229,15 @@ module.exports = class TypeGenerator {
   }
 
   async loadSchema(subgraph) {
-    let maybeRelativePath = subgraph.getIn(['schema', 'file'])
-    let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
+    const maybeRelativePath = subgraph.getIn(['schema', 'file'])
+    const absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
     return await withSpinner(
       `Load GraphQL schema from ${this.displayPath(absolutePath)}`,
       `Failed to load GraphQL schema from ${this.displayPath(absolutePath)}`,
       `Warnings while loading GraphQL schema from ${this.displayPath(absolutePath)}`,
       async _spinner => {
-        let maybeRelativePath = subgraph.getIn(['schema', 'file'])
-        let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
+        const maybeRelativePath = subgraph.getIn(['schema', 'file'])
+        const absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
         return Schema.load(absolutePath)
       },
     )
@@ -250,8 +250,8 @@ module.exports = class TypeGenerator {
       `Warnings while generating types for GraphQL schema`,
       async spinner => {
         // Generate TypeScript module from schema
-        let codeGenerator = schema.codeGenerator()
-        let code = prettier.format(
+        const codeGenerator = schema.codeGenerator()
+        const code = prettier.format(
           [
             GENERATED_FILE_NOTE,
             ...codeGenerator.generateModuleImports(),
@@ -262,7 +262,7 @@ module.exports = class TypeGenerator {
           },
         )
 
-        let outputFile = path.join(this.options.outputDir, 'schema.ts')
+        const outputFile = path.join(this.options.outputDir, 'schema.ts')
         step(spinner, 'Write types to', this.displayPath(outputFile))
         fs.mkdirsSync(path.dirname(outputFile))
         fs.writeFileSync(outputFile, code)
@@ -277,7 +277,7 @@ module.exports = class TypeGenerator {
       `Warnings while generating types for data source templates`,
       async spinner => {
         // Combine the generated code for all templates
-        let codeSegments = subgraph
+        const codeSegments = subgraph
           .get('templates', immutable.List())
           .reduce((codeSegments, template) => {
             step(
@@ -286,7 +286,7 @@ module.exports = class TypeGenerator {
               `${template.get('name')}`,
             )
 
-            let codeGenerator = new DataSourceTemplateCodeGenerator(template)
+            const codeGenerator = new DataSourceTemplateCodeGenerator(template)
 
             // Only generate module imports once, because they are identical for
             // all types generated for data source templates.
@@ -298,11 +298,11 @@ module.exports = class TypeGenerator {
           }, immutable.List())
 
         if (!codeSegments.isEmpty()) {
-          let code = prettier.format([GENERATED_FILE_NOTE, ...codeSegments].join('\n'), {
+          const code = prettier.format([GENERATED_FILE_NOTE, ...codeSegments].join('\n'), {
             parser: 'typescript',
           })
 
-          let outputFile = path.join(this.options.outputDir, 'templates.ts')
+          const outputFile = path.join(this.options.outputDir, 'templates.ts')
           step(spinner, `Write types for templates to`, this.displayPath(outputFile))
           fs.mkdirsSync(path.dirname(outputFile))
           fs.writeFileSync(outputFile, code)
@@ -317,9 +317,9 @@ module.exports = class TypeGenerator {
       `Failed to load data source template ABIs`,
       `Warnings while loading data source template ABIs`,
       async spinner => {
-        let abis = []
-        for (let template of subgraph.get('templates', immutable.List())) {
-          for (let abi of template.getIn(['mapping', 'abis'])) {
+        const abis = []
+        for (const template of subgraph.get('templates', immutable.List())) {
+          for (const abi of template.getIn(['mapping', 'abis'])) {
             abis.push(
               this._loadDataSourceTemplateABI(
                 template,
@@ -353,8 +353,8 @@ module.exports = class TypeGenerator {
 
   async getFilesToWatch() {
     try {
-      let files = []
-      let subgraph = await this.loadSubgraph({ quiet: true })
+      const files = []
+      const subgraph = await this.loadSubgraph({ quiet: true })
 
       // Add the subgraph manifest file
       files.push(this.options.subgraphManifest)
@@ -377,11 +377,11 @@ module.exports = class TypeGenerator {
   }
 
   async watchAndGenerateTypes() {
-    let generator = this
+    const generator = this
     let spinner
 
     // Create watcher and generate types once and then on every change to a watched file
-    let watcher = new Watcher({
+    const watcher = new Watcher({
       onReady: () => (spinner = toolbox.print.spin('Watching subgraph files')),
       onTrigger: async changedFile => {
         if (changedFile !== undefined) {

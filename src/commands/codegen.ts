@@ -18,10 +18,11 @@ module.exports = {
   description: 'Generates AssemblyScript types for a subgraph',
   run: async toolbox => {
     // Obtain tools
-    let { filesystem, print } = toolbox
+    const { filesystem, print } = toolbox
 
     // Read CLI parameters
-    let { h, help, o, outputDir, skipMigrations, w, watch } = toolbox.parameters.options
+    const { h, o, skipMigrations, w } = toolbox.parameters.options
+    let { help, outputDir, watch } = toolbox.parameters.options
 
     // Support both long and short option variants
     help = help || h
@@ -58,7 +59,7 @@ module.exports = {
       return
     }
 
-    let generator = new TypeGenerator({
+    const generator = new TypeGenerator({
       subgraphManifest: manifest,
       outputDir: outputDir,
       skipMigrations,

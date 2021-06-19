@@ -65,7 +65,7 @@ class Compiler {
   }
 
   cacheKeyForFile(filename) {
-    let hash = crypto.createHash('sha1')
+    const hash = crypto.createHash('sha1')
     hash.update(fs.readFileSync(filename))
     return hash.digest('hex')
   }
@@ -78,12 +78,12 @@ class Compiler {
           manifestFile: this.options.subgraphManifest,
         })
       }
-      let subgraph = await this.loadSubgraph()
-      let compiledSubgraph = await this.compileSubgraph(subgraph)
-      let localSubgraph = await this.writeSubgraphToOutputDirectory(compiledSubgraph)
+      const subgraph = await this.loadSubgraph()
+      const compiledSubgraph = await this.compileSubgraph(subgraph)
+      const localSubgraph = await this.writeSubgraphToOutputDirectory(compiledSubgraph)
 
       if (this.ipfs !== undefined) {
-        let ipfsHash = await this.uploadSubgraphToIPFS(localSubgraph)
+        const ipfsHash = await this.uploadSubgraphToIPFS(localSubgraph)
         this.completed(ipfsHash)
         return ipfsHash
       } else {
@@ -121,8 +121,8 @@ class Compiler {
 
   async getFilesToWatch() {
     try {
-      let files = []
-      let subgraph = await this.loadSubgraph({ quiet: true })
+      const files = []
+      const subgraph = await this.loadSubgraph({ quiet: true })
 
       // Add the subgraph manifest file
       files.push(this.options.subgraphManifest)
@@ -144,17 +144,17 @@ class Compiler {
   }
 
   async watchAndCompile(onCompiled = undefined) {
-    let compiler = this
+    const compiler = this
     let spinner
 
     // Create watcher and recompile once and then on every change to a watched file
-    let watcher = new Watcher({
+    const watcher = new Watcher({
       onReady: () => (spinner = toolbox.print.spin('Watching subgraph files')),
       onTrigger: async changedFile => {
         if (changedFile !== undefined) {
           spinner.info(`File change detected: ${this.displayPath(changedFile)}\n`)
         }
-        let ipfsHash = await compiler.compile()
+        const ipfsHash = await compiler.compile()
         if (onCompiled !== undefined) {
           onCompiled(ipfsHash)
         }
@@ -182,9 +182,9 @@ class Compiler {
   }
 
   _writeSubgraphFile(maybeRelativeFile, data, sourceDir, targetDir, spinner) {
-    let absoluteSourceFile = path.resolve(sourceDir, maybeRelativeFile)
-    let relativeSourceFile = path.relative(sourceDir, absoluteSourceFile)
-    let targetFile = path.join(targetDir, relativeSourceFile)
+    const absoluteSourceFile = path.resolve(sourceDir, maybeRelativeFile)
+    const relativeSourceFile = path.relative(sourceDir, absoluteSourceFile)
+    const targetFile = path.join(targetDir, relativeSourceFile)
     step(spinner, 'Write subgraph file', this.displayPath(targetFile))
     fs.mkdirsSync(path.dirname(targetFile))
     fs.writeFileSync(targetFile, data)
@@ -198,7 +198,7 @@ class Compiler {
       `Warnings while compiling subgraph`,
       async spinner => {
         // Cache compiled files so identical input files are only compiled once
-        let compiledFiles = new Map()
+        const compiledFiles = new Map()
 
         subgraph = subgraph.update('dataSources', dataSources =>
           dataSources.map(dataSource =>
@@ -235,18 +235,18 @@ class Compiler {
 
   _compileDataSourceMapping(dataSource, mappingPath, compiledFiles, spinner) {
     try {
-      let dataSourceName = dataSource.getIn(['name'])
+      const dataSourceName = dataSource.getIn(['name'])
 
-      let baseDir = this.sourceDir
-      let absoluteMappingPath = path.resolve(baseDir, mappingPath)
-      let inputFile = path.relative(baseDir, absoluteMappingPath)
+      const baseDir = this.sourceDir
+      const absoluteMappingPath = path.resolve(baseDir, mappingPath)
+      const inputFile = path.relative(baseDir, absoluteMappingPath)
 
       // If the file has already been compiled elsewhere, just use that output
       // file and return early
-      let inputCacheKey = this.cacheKeyForFile(absoluteMappingPath)
-      let alreadyCompiled = compiledFiles.has(inputCacheKey)
+      const inputCacheKey = this.cacheKeyForFile(absoluteMappingPath)
+      const alreadyCompiled = compiledFiles.has(inputCacheKey)
       if (alreadyCompiled) {
-        let outFile = compiledFiles.get(inputCacheKey)
+        const outFile = compiledFiles.get(inputCacheKey)
         step(
           spinner,
           'Compile data source:',
@@ -255,7 +255,7 @@ class Compiler {
         return outFile
       }
 
-      let outFile = path.resolve(
+      const outFile = path.resolve(
         this.subgraphDir(this.options.outputDir, dataSource),
         this.options.outputFormat == 'wasm'
           ? `${dataSourceName}.wasm`
@@ -268,7 +268,7 @@ class Compiler {
         `${dataSourceName} => ${this.displayPath(outFile)}`,
       )
 
-      let outputFile = path.relative(baseDir, outFile)
+      const outputFile = path.relative(baseDir, outFile)
 
       // Create output directory
       try {
@@ -277,8 +277,8 @@ class Compiler {
         throw e
       }
 
-      let libs = this.libsDirs.join(',')
-      let global = path.relative(baseDir, this.globalsFile)
+      const libs = this.libsDirs.join(',')
+      const global = path.relative(baseDir, this.globalsFile)
 
       asc.main(
         [
@@ -315,18 +315,18 @@ class Compiler {
 
   _compileTemplateMapping(template, mappingPath, compiledFiles, spinner) {
     try {
-      let templateName = template.get('name')
+      const templateName = template.get('name')
 
-      let baseDir = this.sourceDir
-      let absoluteMappingPath = path.resolve(baseDir, mappingPath)
-      let inputFile = path.relative(baseDir, absoluteMappingPath)
+      const baseDir = this.sourceDir
+      const absoluteMappingPath = path.resolve(baseDir, mappingPath)
+      const inputFile = path.relative(baseDir, absoluteMappingPath)
 
       // If the file has already been compiled elsewhere, just use that output
       // file and return early
-      let inputCacheKey = this.cacheKeyForFile(absoluteMappingPath)
-      let alreadyCompiled = compiledFiles.has(inputCacheKey)
+      const inputCacheKey = this.cacheKeyForFile(absoluteMappingPath)
+      const alreadyCompiled = compiledFiles.has(inputCacheKey)
       if (alreadyCompiled) {
-        let outFile = compiledFiles.get(inputCacheKey)
+        const outFile = compiledFiles.get(inputCacheKey)
         step(
           spinner,
           'Compile data source template:',
@@ -335,7 +335,7 @@ class Compiler {
         return outFile
       }
 
-      let outFile = path.resolve(
+      const outFile = path.resolve(
         this.options.outputDir,
         'templates',
         templateName,
@@ -350,7 +350,7 @@ class Compiler {
         `${templateName} => ${this.displayPath(outFile)}`,
       )
 
-      let outputFile = path.relative(baseDir, outFile)
+      const outputFile = path.relative(baseDir, outFile)
 
       // Create output directory
       try {
@@ -359,8 +359,8 @@ class Compiler {
         throw e
       }
 
-      let libs = this.libsDirs.join(',')
-      let global = path.relative(baseDir, this.globalsFile)
+      const libs = this.libsDirs.join(',')
+      const global = path.relative(baseDir, this.globalsFile)
 
       asc.main(
         [
@@ -424,7 +424,7 @@ class Compiler {
                 abis.map(abi =>
                   abi.update('file', abiFile => {
                     abiFile = path.resolve(this.sourceDir, abiFile)
-                    let abiData = ABI.load(abi.get('name'), abiFile)
+                    const abiData = ABI.load(abi.get('name'), abiFile)
                     return path.relative(
                       this.options.outputDir,
                       this._writeSubgraphFile(
@@ -461,7 +461,7 @@ class Compiler {
                     abis.map(abi =>
                       abi.update('file', abiFile => {
                         abiFile = path.resolve(this.sourceDir, abiFile)
-                        let abiData = ABI.load(abi.get('name'), abiFile)
+                        const abiData = ABI.load(abi.get('name'), abiFile)
                         return path.relative(
                           this.options.outputDir,
                           this._writeSubgraphFile(
@@ -488,7 +488,7 @@ class Compiler {
         })
 
         // Write the subgraph manifest itself
-        let outputFilename = path.join(this.options.outputDir, 'subgraph.yaml')
+        const outputFilename = path.join(this.options.outputDir, 'subgraph.yaml')
         step(spinner, 'Write subgraph manifest', this.displayPath(outputFilename))
         Subgraph.write(subgraph, outputFilename)
 
@@ -504,10 +504,10 @@ class Compiler {
       `Warnings while uploading subgraph to IPFS`,
       async spinner => {
         // Cache uploaded IPFS files so identical files are only uploaded once
-        let uploadedFiles = new Map()
+        const uploadedFiles = new Map()
 
         // Collect all source (path -> hash) updates to apply them later
-        let updates = []
+        const updates = []
 
         // Upload the schema to IPFS
         updates.push({
@@ -520,8 +520,8 @@ class Compiler {
         })
 
         // Upload the ABIs of all data sources to IPFS
-        for (let [i, dataSource] of subgraph.get('dataSources').entries()) {
-          for (let [j, abi] of dataSource.getIn(['mapping', 'abis']).entries()) {
+        for (const [i, dataSource] of subgraph.get('dataSources').entries()) {
+          for (const [j, abi] of dataSource.getIn(['mapping', 'abis']).entries()) {
             updates.push({
               keyPath: ['dataSources', i, 'mapping', 'abis', j, 'file'],
               value: await this._uploadFileToIPFS(
@@ -534,7 +534,7 @@ class Compiler {
         }
 
         // Upload all mappings
-        for (let [i, dataSource] of subgraph.get('dataSources').entries()) {
+        for (const [i, dataSource] of subgraph.get('dataSources').entries()) {
           updates.push({
             keyPath: ['dataSources', i, 'mapping', 'file'],
             value: await this._uploadFileToIPFS(
@@ -546,8 +546,8 @@ class Compiler {
         }
 
         // Upload the mapping and ABIs of all data source templates
-        for (let [i, template] of subgraph.get('templates', immutable.List()).entries()) {
-          for (let [j, abi] of template.getIn(['mapping', 'abis']).entries()) {
+        for (const [i, template] of subgraph.get('templates', immutable.List()).entries()) {
+          for (const [j, abi] of template.getIn(['mapping', 'abis']).entries()) {
             updates.push({
               keyPath: ['templates', i, 'mapping', 'abis', j, 'file'],
               value: await this._uploadFileToIPFS(
@@ -569,7 +569,7 @@ class Compiler {
         }
 
         // Apply all updates to the subgraph
-        for (let update of updates) {
+        for (const update of updates) {
           subgraph = subgraph.setIn(update.keyPath, update.value)
         }
 
@@ -580,15 +580,15 @@ class Compiler {
   }
 
   async _uploadFileToIPFS(maybeRelativeFile, uploadedFiles, spinner) {
-    let absoluteFile = path.resolve(this.options.outputDir, maybeRelativeFile)
+    const absoluteFile = path.resolve(this.options.outputDir, maybeRelativeFile)
     step(spinner, 'Add file to IPFS', this.displayPath(absoluteFile))
 
-    let uploadCacheKey = this.cacheKeyForFile(absoluteFile)
-    let alreadyUploaded = uploadedFiles.has(uploadCacheKey)
+    const uploadCacheKey = this.cacheKeyForFile(absoluteFile)
+    const alreadyUploaded = uploadedFiles.has(uploadCacheKey)
 
     if (!alreadyUploaded) {
-      let content = Buffer.from(fs.readFileSync(absoluteFile), 'utf-8')
-      let hash = await this._uploadToIPFS({
+      const content = Buffer.from(fs.readFileSync(absoluteFile), 'utf-8')
+      const hash = await this._uploadToIPFS({
         path: path.relative(this.options.outputDir, absoluteFile),
         content: content,
       })
@@ -596,7 +596,7 @@ class Compiler {
       uploadedFiles.set(uploadCacheKey, hash)
     }
 
-    let hash = uploadedFiles.get(uploadCacheKey)
+    const hash = uploadedFiles.get(uploadCacheKey)
     step(
       spinner,
       '              ..',
@@ -606,14 +606,14 @@ class Compiler {
   }
 
   async _uploadSubgraphDefinitionToIPFS(subgraph) {
-    let str = yaml.safeDump(subgraph.toJS(), { noRefs: true, sortKeys: true })
-    let file = { path: 'subgraph.yaml', content: Buffer.from(str, 'utf-8') }
+    const str = yaml.safeDump(subgraph.toJS(), { noRefs: true, sortKeys: true })
+    const file = { path: 'subgraph.yaml', content: Buffer.from(str, 'utf-8') }
     return await this._uploadToIPFS(file)
   }
 
   async _uploadToIPFS(file) {
     try {
-      let hash = (await this.ipfs.add([file]))[0].hash
+      const hash = (await this.ipfs.add([file]))[0].hash
       await this.ipfs.pin.add(hash)
       return hash
     } catch (e) {

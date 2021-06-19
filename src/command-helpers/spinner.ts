@@ -22,12 +22,12 @@ const step = (spinner, subject, text) => {
 // Otherwise the spinner prints the in-progress message with a check mark
 //   and simply returns the value returned by `f`.
 const withSpinner = async (text, errorText, warningText, f) => {
-  let spinner = toolbox.print.spin(text)
+  const spinner = toolbox.print.spin(text)
   try {
-    let result = await f(spinner)
+    const result = await f(spinner)
     if (typeof result === 'object') {
-      let hasWarning = Object.keys(result).indexOf('warning') >= 0
-      let hasResult = Object.keys(result).indexOf('result') >= 0
+      const hasWarning = Object.keys(result).indexOf('warning') >= 0
+      const hasResult = Object.keys(result).indexOf('result') >= 0
       if (hasWarning && hasResult) {
         if (result.warning !== null) {
           spinner.warn(`${warningText}: ${result.warning}`)

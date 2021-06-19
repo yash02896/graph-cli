@@ -70,11 +70,11 @@ module.exports = class ABI {
    * - Multiple inputs and outputs: `example(uint256,(string,bytes32)):(bool,uint256)`
    */
   functionSignature(fn) {
-    let inputs = fn
+    const inputs = fn
       .get('inputs', [])
       .map(buildSignatureParameter)
       .join(',')
-    let outputs = fn
+    const outputs = fn
       .get('outputs', [])
       .map(buildSignatureParameter)
       .join(',')
@@ -96,14 +96,14 @@ module.exports = class ABI {
   callFunctions() {
     // An entry is a function if its type is not set or if it is one of
     // 'constructor', 'function' or 'fallback'
-    let functionTypes = immutable.Set(['constructor', 'function', 'fallback'])
-    let functions = this.data.filter(
+    const functionTypes = immutable.Set(['constructor', 'function', 'fallback'])
+    const functions = this.data.filter(
       entry => !entry.has('type') || functionTypes.includes(entry.get('type')),
     )
 
     // A function is a call function if it is nonpayable, payable or
     // not constant
-    let mutabilityTypes = immutable.Set(['nonpayable', 'payable'])
+    const mutabilityTypes = immutable.Set(['nonpayable', 'payable'])
     return functions.filter(
       entry =>
         mutabilityTypes.includes(entry.get('stateMutability')) ||
@@ -140,8 +140,8 @@ module.exports = class ABI {
   }
 
   static load(name, file) {
-    let data = JSON.parse(fs.readFileSync(file))
-    let abi = ABI.normalized(data)
+    const data = JSON.parse(fs.readFileSync(file))
+    const abi = ABI.normalized(data)
 
     if (abi === null || abi === undefined) {
       throw Error(`No valid ABI in file: ${path.relative(process.cwd(), file)}`)

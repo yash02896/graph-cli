@@ -41,12 +41,12 @@ const buildCombinedWarning = (filename, warnings) =>
 module.exports = class Subgraph {
   static validate(data, { resolveFile }) {
     // Parse the default subgraph schema
-    let schema = graphql.parse(
+    const schema = graphql.parse(
       fs.readFileSync(path.join(__dirname, '..', 'manifest-schema.graphql'), 'utf-8'),
     )
 
     // Obtain the root `SubgraphManifest` type from the schema
-    let rootType = schema.definitions.find(definition => {
+    const rootType = schema.definitions.find(definition => {
       return definition.name.value === 'SubgraphManifest'
     })
 
@@ -55,14 +55,14 @@ module.exports = class Subgraph {
   }
 
   static validateSchema(manifest, { resolveFile }) {
-    let filename = resolveFile(manifest.getIn(['schema', 'file']))
+    const filename = resolveFile(manifest.getIn(['schema', 'file']))
     let errors = validation.validateSchema(filename)
 
     if (errors.size > 0) {
       errors = errors.groupBy(error => error.get('entity')).sort()
-      let msg = errors.reduce((msg, errors, entity) => {
+      const msg = errors.reduce((msg, errors, entity) => {
         errors = errors.groupBy(error => error.get('directive'))
-        let inner_msgs = errors.reduce((msg, errors, directive) => {
+        const inner_msgs = errors.reduce((msg, errors, directive) => {
           return `${msg}${
             directive
               ? `
@@ -120,9 +120,9 @@ module.exports = class Subgraph {
   static validateDataSourceAbis(dataSource, { resolveFile, path }) {
     // Validate that the the "source > abi" reference of all data sources
     // points to an existing ABI in the data source ABIs
-    let abiName = dataSource.getIn(['source', 'abi'])
-    let abiNames = dataSource.getIn(['mapping', 'abis']).map(abi => abi.get('name'))
-    let nameErrors = abiNames.includes(abiName)
+    const abiName = dataSource.getIn(['source', 'abi'])
+    const abiNames = dataSource.getIn(['mapping', 'abis']).map(abi => abi.get('name'))
+    const nameErrors = abiNames.includes(abiName)
       ? immutable.List()
       : immutable.fromJS([
           {
@@ -138,7 +138,7 @@ ${abiNames
         ])
 
     // Validate that all ABI files are valid
-    let fileErrors = dataSource
+    const fileErrors = dataSource
       .getIn(['mapping', 'abis'])
       .reduce((errors, abi, abiIndex) => {
         try {
@@ -158,8 +158,8 @@ ${abiNames
   }
 
   static validateAbis(manifest, { resolveFile }) {
-    let dataSources = Subgraph.collectDataSources(manifest)
-    let dataSourceTemplates = Subgraph.collectDataSourceTemplates(manifest)
+    const dataSources = Subgraph.collectDataSources(manifest)
+    const dataSourceTemplates = Subgraph.collectDataSourceTemplates(manifest)
 
     return dataSources.concat(dataSourceTemplates).reduce(
       (errors, dataSourceOrTemplate) =>
@@ -178,17 +178,17 @@ ${abiNames
       .get('dataSources')
       .filter(dataSource => dataSource.get('kind') === 'ethereum/contract')
       .reduce((errors, dataSource, dataSourceIndex) => {
-        let path = ['dataSources', dataSourceIndex, 'source', 'address']
+        const path = ['dataSources', dataSourceIndex, 'source', 'address']
 
         // No need to validate if the source has no contract address
         if (!dataSource.get('source').has('address')) {
           return errors
         }
 
-        let address = dataSource.getIn(['source', 'address'])
+        const address = dataSource.getIn(['source', 'address'])
 
         // Validate whether the address is valid
-        let pattern = /^(0x)?[0-9a-fA-F]{40}$/
+        const pattern = /^(0x)?[0-9a-fA-F]{40}$/
         if (pattern.test(address)) {
           return errors
         } else {
@@ -208,8 +208,8 @@ Must be 40 hexadecimal characters, with an optional '0x' prefix.`,
     let abi
     try {
       // Resolve the source ABI name into a real ABI object
-      let abiName = dataSource.getIn(['source', 'abi'])
-      let abiEntry = dataSource
+      const abiName = dataSource.getIn(['source', 'abi'])
+      const abiEntry = dataSource
         .getIn(['mapping', 'abis'])
         .find(abi => abi.get('name') === abiName)
       abi = ABI.load(abiEntry.get('name'), resolveFile(abiEntry.get('file')))
@@ -220,12 +220,12 @@ Must be 40 hexadecimal characters, with an optional '0x' prefix.`,
     }
 
     // Obtain event signatures from the mapping
-    let manifestEvents = dataSource
+    const manifestEvents = dataSource
       .getIn(['mapping', 'eventHandlers'], immutable.List())
       .map(handler => handler.get('event'))
 
     // Obtain event signatures from the ABI
-    let abiEvents = abi.eventSignatures()
+    const abiEvents = abi.eventSignatures()
 
     // Add errors for every manifest event signature that is not
     // present in the ABI
@@ -250,8 +250,8 @@ ${abiEvents
   }
 
   static validateEvents(manifest, { resolveFile }) {
-    let dataSources = Subgraph.collectDataSources(manifest)
-    let dataSourceTemplates = Subgraph.collectDataSourceTemplates(manifest)
+    const dataSources = Subgraph.collectDataSources(manifest)
+    const dataSourceTemplates = Subgraph.collectDataSourceTemplates(manifest)
 
     return dataSources
       .concat(dataSourceTemplates)
@@ -270,13 +270,13 @@ ${abiEvents
       .get('dataSources')
       .filter(dataSource => dataSource.get('kind') === 'ethereum/contract')
       .reduce((errors, dataSource, dataSourceIndex) => {
-        let path = ['dataSources', dataSourceIndex, 'callHandlers']
+        const path = ['dataSources', dataSourceIndex, 'callHandlers']
 
         let abi
         try {
           // Resolve the source ABI name into a real ABI object
-          let abiName = dataSource.getIn(['source', 'abi'])
-          let abiEntry = dataSource
+          const abiName = dataSource.getIn(['source', 'abi'])
+          const abiEntry = dataSource
             .getIn(['mapping', 'abis'])
             .find(abi => abi.get('name') === abiName)
           abi = ABI.load(abiEntry.get('name'), resolveFile(abiEntry.get('file')))
@@ -287,12 +287,12 @@ ${abiEvents
         }
 
         // Obtain event signatures from the mapping
-        let manifestFunctions = dataSource
+        const manifestFunctions = dataSource
           .getIn(['mapping', 'callHandlers'], immutable.List())
           .map(handler => handler.get('function'))
 
         // Obtain event signatures from the ABI
-        let abiFunctions = abi.callFunctionSignatures()
+        const abiFunctions = abi.callFunctionSignatures()
 
         // Add errors for every manifest event signature that is not
         // present in the ABI
@@ -349,12 +349,12 @@ Please update it to tell users more about your subgraph.`,
       .get('dataSources')
       .filter(dataSource => dataSource.get('kind') === 'ethereum/contract')
       .reduce((errors, dataSource, dataSourceIndex) => {
-        let path = ['dataSources', dataSourceIndex, 'mapping']
+        const path = ['dataSources', dataSourceIndex, 'mapping']
 
-        let mapping = dataSource.get('mapping')
-        let blockHandlers = mapping.get('blockHandlers', immutable.List())
-        let callHandlers = mapping.get('callHandlers', immutable.List())
-        let eventHandlers = mapping.get('eventHandlers', immutable.List())
+        const mapping = dataSource.get('mapping')
+        const blockHandlers = mapping.get('blockHandlers', immutable.List())
+        const callHandlers = mapping.get('callHandlers', immutable.List())
+        const eventHandlers = mapping.get('eventHandlers', immutable.List())
 
         return blockHandlers.isEmpty() &&
           callHandlers.isEmpty() &&
@@ -373,10 +373,10 @@ At least one such handler must be defined.`,
 
   // Validate that data source names are unique, so they don't overwrite each other.
   static validateUniqueDataSourceNames(manifest) {
-    let names = []
+    const names = []
     return manifest.get('dataSources').reduce((errors, dataSource, dataSourceIndex) => {
-      let path = ['dataSources', dataSourceIndex, 'name']
-      let name = dataSource.get('name')
+      const path = ['dataSources', dataSourceIndex, 'name']
+      const name = dataSource.get('name')
       if (names.includes(name)) {
         errors = errors.push(
           immutable.fromJS({
@@ -392,12 +392,12 @@ More than one data source named '${name}', data source names must be unique.`,
   }
 
   static validateUniqueTemplateNames(manifest) {
-    let names = []
+    const names = []
     return manifest
       .get('templates', immutable.List())
       .reduce((errors, template, templateIndex) => {
-        let path = ['templates', templateIndex, 'name']
-        let name = template.get('name')
+        const path = ['templates', templateIndex, 'name']
+        const name = template.get('name')
         if (names.includes(name)) {
           errors = errors.push(
             immutable.fromJS({
@@ -432,21 +432,21 @@ More than one template named '${name}', template names must be unique.`,
     }
 
     // Helper to resolve files relative to the subgraph manifest
-    let resolveFile = maybeRelativeFile =>
+    const resolveFile = maybeRelativeFile =>
       path.resolve(path.dirname(filename), maybeRelativeFile)
 
-    let manifestErrors = Subgraph.validate(data, { resolveFile })
+    const manifestErrors = Subgraph.validate(data, { resolveFile })
     if (manifestErrors.size > 0) {
       throwCombinedError(filename, manifestErrors)
     }
 
-    let manifest = immutable.fromJS(data)
+    const manifest = immutable.fromJS(data)
 
     // Validate the schema
     Subgraph.validateSchema(manifest, { resolveFile })
 
     // Perform other validations
-    let errors = skipValidation
+    const errors = skipValidation
       ? immutable.List()
       : immutable.List.of(
           ...Subgraph.validateAbis(manifest, { resolveFile }),
@@ -463,7 +463,7 @@ More than one template named '${name}', template names must be unique.`,
     }
 
     // Perform warning validations
-    let warnings = skipValidation
+    const warnings = skipValidation
       ? immutable.List()
       : immutable.List.of(
           ...Subgraph.validateRepository(manifest, { resolveFile }),

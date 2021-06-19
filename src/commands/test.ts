@@ -35,21 +35,24 @@ module.exports = {
   description: 'Runs tests against a Graph Node environment (using Ganache by default)',
   run: async toolbox => {
     // Obtain tools
-    let { filesystem, print } = toolbox
+    const { filesystem, print } = toolbox
 
     // Parse CLI parameters
-    let {
-      composeFile,
-      ethereumLogs,
+    const {
       h,
-      help,
       nodeImage,
-      nodeLogs,
       skipWaitForEthereum,
       skipWaitForIpfs,
       skipWaitForPostgres,
       standaloneNode,
       standaloneNodeArgs,
+    } = toolbox.parameters.options
+
+    let {
+      composeFile,
+      ethereumLogs,
+      help,
+      nodeLogs,
       timeout,
     } = toolbox.parameters.options
 
@@ -57,7 +60,7 @@ module.exports = {
     help = help || h
 
     // Extract test command
-    let params = fixParameters(toolbox.parameters, {
+    const params = fixParameters(toolbox.parameters, {
       ethereumLogs,
       h,
       help,
@@ -79,7 +82,7 @@ module.exports = {
       return
     }
 
-    let testCommand = params[0]
+    const testCommand = params[0]
 
     // Obtain the Docker Compose file for services that the tests run against
     composeFile =
@@ -103,7 +106,7 @@ module.exports = {
     }
 
     // Create temporary directory to operate in
-    let tempdir = tmp.dirSync({ prefix: 'graph-test', unsafeCleanup: true }).name
+    const tempdir = tmp.dirSync({ prefix: 'graph-test', unsafeCleanup: true }).name
     try {
       await configureTestEnvironment(toolbox, tempdir, composeFile, nodeImage)
     } catch (e) {
@@ -136,7 +139,7 @@ module.exports = {
 
     // Bring up Graph Node separately, if a standalone node is used
     let nodeProcess
-    let nodeOutputChunks = []
+    const nodeOutputChunks = []
     if (standaloneNode) {
       try {
         nodeProcess = await startGraphNode(
@@ -178,7 +181,7 @@ module.exports = {
     }
 
     // Run tests
-    let result = await runTests(testCommand)
+    const result = await runTests(testCommand)
 
     // Bring down Graph Node, if a standalone node is used
     if (nodeProcess) {
@@ -255,7 +258,7 @@ const configureTestEnvironment = async (toolbox, tempdir, composeFile, nodeImage
     `Warnings configuring test environment`,
     async _spinner => {
       // Temporary compose file
-      let tempComposeFile = path.join(tempdir, 'compose', 'docker-compose.yml')
+      const tempComposeFile = path.join(tempdir, 'compose', 'docker-compose.yml')
 
       // Copy the compose file to the temporary directory
       await toolbox.filesystem.copy(composeFile, tempComposeFile)
@@ -272,7 +275,7 @@ const configureTestEnvironment = async (toolbox, tempdir, composeFile, nodeImage
   )
 
 const waitFor = async (timeout, testFn) => {
-  let deadline = Date.now() + timeout
+  const deadline = Date.now() + timeout
   let error = undefined
   return new Promise((resolve, reject) => {
     const check = async () => {
@@ -280,7 +283,7 @@ const waitFor = async (timeout, testFn) => {
         reject(error)
       } else {
         try {
-          let result = await testFn()
+          const result = await testFn()
           resolve(result)
         } catch (e) {
           error = e
@@ -366,7 +369,7 @@ const waitForTestEnvironment = async ({
           async () =>
             new Promise((resolve, reject) => {
               try {
-                let socket = net.connect(15432, 'localhost', () => resolve())
+                const socket = net.connect(15432, 'localhost', () => resolve())
                 socket.on('error', e =>
                   reject(new Error(`Could not connect to Postgres: ${e}`)),
                 )
@@ -405,7 +408,7 @@ const startGraphNode = async (standaloneNode, standaloneNodeArgs, nodeOutputChun
     `Failed to start Graph node`,
     `Warnings starting Graph node`,
     async spinner => {
-      let defaultArgs = [
+      const defaultArgs = [
         '--ipfs',
         'localhost:15001',
         '--postgres-url',
@@ -424,14 +427,14 @@ const startGraphNode = async (standaloneNode, standaloneNodeArgs, nodeOutputChun
         '18040',
       ]
 
-      let defaultEnv = {
+      const defaultEnv = {
         GRAPH_LOG: 'debug',
       }
 
-      let args = standaloneNodeArgs ? standaloneNodeArgs.split(' ') : defaultArgs
-      let env = { ...defaultEnv, ...process.env }
+      const args = standaloneNodeArgs ? standaloneNodeArgs.split(' ') : defaultArgs
+      const env = { ...defaultEnv, ...process.env }
 
-      let nodeProcess = spawn(standaloneNode, args, {
+      const nodeProcess = spawn(standaloneNode, args, {
         cwd: process.cwd(),
         env,
       })
@@ -483,7 +486,7 @@ const collectGraphNodeLogs = async (tempdir, standaloneNode, nodeOutputChunks) =
     return stripAnsi(Buffer.concat(nodeOutputChunks).toString('utf-8'))
   } else {
     // Pull the logs from docker compose
-    let logs = await compose.logs('graph-node', {
+    const logs = await compose.logs('graph-node', {
       follow: false,
       cwd: path.join(tempdir, 'compose'),
     })
@@ -492,7 +495,7 @@ const collectGraphNodeLogs = async (tempdir, standaloneNode, nodeOutputChunks) =
 }
 
 const collectEthereumLogs = async tempdir => {
-  let logs = await compose.logs('ethereum', {
+  const logs = await compose.logs('ethereum', {
     follow: false,
     cwd: path.join(tempdir, 'compose'),
   })
@@ -506,8 +509,8 @@ const runTests = async testCommand =>
     `Warnings running tests`,
     async _spinner =>
       new Promise((resolve, _reject) => {
-        let output = []
-        let testProcess = spawn(`${testCommand}`, { shell: true })
+        const output = []
+        const testProcess = spawn(`${testCommand}`, { shell: true })
         testProcess.stdout.on('data', data => output.push(Buffer.from(data)))
         testProcess.stderr.on('data', data => output.push(Buffer.from(data)))
         testProcess.on('close', code => {

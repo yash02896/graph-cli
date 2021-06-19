@@ -18,11 +18,12 @@ module.exports = {
   description: 'Unregisters a subgraph name',
   run: async toolbox => {
     // Obtain tools
-    let { print } = toolbox
+    const { print } = toolbox
 
     // Read CLI parameters
-    let { accessToken, g, h, help, node } = toolbox.parameters.options
-    let subgraphName = toolbox.parameters.first
+    const { g, h } = toolbox.parameters.options
+    let { accessToken, help, node } = toolbox.parameters.options
+    const subgraphName = toolbox.parameters.first
 
     // Support both long and short option variants
     help = help || h
@@ -57,8 +58,8 @@ module.exports = {
       return
     }
 
-    let requestUrl = new URL(node)
-    let client = createJsonRpcClient(requestUrl)
+    const requestUrl = new URL(node)
+    const client = createJsonRpcClient(requestUrl)
 
     // Exit with an error code if the client couldn't be created
     if (!client) {
@@ -72,7 +73,7 @@ module.exports = {
       client.options.headers = { Authorization: `Bearer ${accessToken}` }
     }
 
-    let spinner = print.spin(`Creating subgraph in Graph node: ${requestUrl}`)
+    const spinner = print.spin(`Creating subgraph in Graph node: ${requestUrl}`)
     client.request('subgraph_remove', { name: subgraphName }, function(
       requestError,
       jsonRpcError,

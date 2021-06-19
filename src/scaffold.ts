@@ -88,7 +88,7 @@ dataSources:
 // Schema
 
 const ethereumTypeToGraphQL = name => {
-  let ascType = ascTypeForEthereum(name)
+  const ascType = ascTypeForEthereum(name)
   return valueTypeForAsc(ascType)
 }
 
@@ -132,7 +132,7 @@ const generateExampleEntityType = events => {
 }
 
 const generateSchema = ({ abi, indexEvents }) => {
-  let events = abiEvents(abi).toJS()
+  const events = abiEvents(abi).toJS()
   return prettier.format(
     indexEvents
       ? events.map(generateEventType).join('\n\n')
@@ -256,7 +256,7 @@ export function handle${event._alias}(event: ${event._alias}): void {}
     .join('\n')}`
 
 const generateMapping = ({ abi, indexEvents, contractName }) => {
-  let events = abiEvents(abi).toJS()
+  const events = abiEvents(abi).toJS()
   return prettier.format(
     indexEvents
       ? generateEventIndexingHandlers(events, contractName)
@@ -270,10 +270,10 @@ const generateScaffold = async (
   spinner,
 ) => {
   step(spinner, 'Generate subgraph from ABI')
-  let packageJson = generatePackageJson({ subgraphName })
-  let manifest = generateManifest({ abi, address, network, contractName })
-  let schema = generateSchema({ abi, indexEvents, contractName })
-  let mapping = generateMapping({ abi, subgraphName, indexEvents, contractName })
+  const packageJson = generatePackageJson({ subgraphName })
+  const manifest = generateManifest({ abi, address, network, contractName })
+  const schema = generateSchema({ abi, indexEvents, contractName })
+  const mapping = generateMapping({ abi, subgraphName, indexEvents, contractName })
 
   return {
     'package.json': packageJson,
@@ -293,8 +293,8 @@ const writeScaffoldDirectory = async (scaffold, directory, spinner) => {
   fs.mkdirsSync(directory)
 
   Object.keys(scaffold).forEach(basename => {
-    let content = scaffold[basename]
-    let filename = path.join(directory, basename)
+    const content = scaffold[basename]
+    const filename = path.join(directory, basename)
 
     // Write file or recurse into subdirectory
     if (typeof content === 'string') {

@@ -21,17 +21,17 @@ module.exports = class DataSourceTemplateCodeGenerator {
   }
 
   _generateTemplateType() {
-    let name = this.template.get('name')
+    const name = this.template.get('name')
 
-    let klass = tsCodegen.klass(name, { export: true, extends: 'DataSourceTemplate' })
+    const klass = tsCodegen.klass(name, { export: true, extends: 'DataSourceTemplate' })
     klass.addMethod(this._generateCreateMethod())
     klass.addMethod(this._generateCreateWithContextMethod())
     return klass
   }
 
   _generateCreateMethod() {
-    let name = this.template.get('name')
-    let kind = this.template.get('kind')
+    const name = this.template.get('name')
+    const kind = this.template.get('kind')
 
     switch (kind) {
       case 'ethereum/contract':
@@ -52,8 +52,8 @@ module.exports = class DataSourceTemplateCodeGenerator {
   }
 
   _generateCreateWithContextMethod() {
-    let name = this.template.get('name')
-    let kind = this.template.get('kind')
+    const name = this.template.get('name')
+    const kind = this.template.get('kind')
 
     switch (kind) {
       case 'ethereum/contract':

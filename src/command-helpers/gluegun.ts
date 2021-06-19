@@ -25,11 +25,11 @@
 // parameters array and returns the result of that.
 //
 const fixParameters = (parameters, booleanOptions) => {
-  let unexpectedStringOptions = Object.keys(booleanOptions)
+  const unexpectedStringOptions = Object.keys(booleanOptions)
     .filter(key => typeof booleanOptions[key] === 'string')
     .map(key => ({ key, value: booleanOptions[key] }))
 
-  let optionNames = unexpectedStringOptions
+  const optionNames = unexpectedStringOptions
     .map(({ key }) => `--` + key.replace(/([A-Z])/, '-$1').toLowerCase())
     .join(', ')
 
@@ -38,7 +38,7 @@ const fixParameters = (parameters, booleanOptions) => {
       `Unexpected value provided for one or more of ${optionNames}. See --help for more information.`
     )
   } else if (unexpectedStringOptions.length == 1) {
-    let params = parameters.array
+    const params = parameters.array
     params.unshift(unexpectedStringOptions[0].value)
     return params
   } else {

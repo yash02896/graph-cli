@@ -78,7 +78,7 @@ const validateEntityDirective = def =>
       ])
 
 const validateEntityID = def => {
-  let idField = def.fields.find(field => field.name.value === 'id')
+  const idField = def.fields.find(field => field.name.value === 'id')
 
   if (idField === undefined) {
     return immutable.fromJS([
@@ -139,12 +139,12 @@ Reason: Lists with null elements are not supported.`,
     : List()
 
 const unwrapType = type => {
-  let innerTypeFromList = listType =>
+  const innerTypeFromList = listType =>
     listType.type.kind === 'NonNullType'
       ? innerTypeFromNonNull(listType.type)
       : listType.type
 
-  let innerTypeFromNonNull = nonNullType =>
+  const innerTypeFromNonNull = nonNullType =>
     nonNullType.type.kind === 'ListType'
       ? innerTypeFromList(nonNullType.type)
       : nonNullType.type
@@ -231,16 +231,16 @@ const fieldTargetEntity = (defs, field) =>
   entityTypeByName(defs, fieldTargetEntityName(field))
 
 const validateInnerFieldType = (defs, def, field) => {
-  let innerType = unwrapType(field.type)
+  const innerType = unwrapType(field.type)
 
   // Get the name of the type
-  let typeName = innerType.name.value
+  const typeName = innerType.name.value
 
   // Look up a possible suggestion for the type to catch common mistakes
-  let suggestion = typeSuggestion(typeName)
+  const suggestion = typeSuggestion(typeName)
 
   // Collect all types that we can use here: built-ins + entities + enums + interfaces
-  let availableTypes = List.of(
+  const availableTypes = List.of(
     ...BUILTIN_SCALAR_TYPES,
     ...gatherLocalTypes(defs),
     ...gatherImportedTypes(defs),
@@ -308,7 +308,7 @@ Value of the @derivedFrom 'field' argument must be a string`,
     ])
   }
 
-  let targetEntity = fieldTargetEntity(defs, field)
+  const targetEntity = fieldTargetEntity(defs, field)
   if (targetEntity === undefined) {
     // This is handled in `validateInnerFieldType` but if we don't catch
     // the undefined case here, the code below will throw, as it assumes
@@ -316,7 +316,7 @@ Value of the @derivedFrom 'field' argument must be a string`,
     return immutable.fromJS([])
   }
 
-  let derivedFromField = targetEntity.fields.find(
+  const derivedFromField = targetEntity.fields.find(
     field => field.name.value === directive.arguments[0].value.value,
   )
 
@@ -333,8 +333,8 @@ does not exist on type '${targetEntity.name.value}'`,
     ])
   }
 
-  let backrefTypeName = unwrapType(derivedFromField.type)
-  let backRefEntity = entityTypeByName(defs, backrefTypeName.name.value)
+  const backrefTypeName = unwrapType(derivedFromField.type)
+  const backRefEntity = entityTypeByName(defs, backrefTypeName.name.value)
 
   // The field we are deriving from must either have type 'def' or one of the
   // interface types that 'def' is implementing
@@ -418,7 +418,7 @@ const validateFulltextFields = (def, directive) => {
 }
 
 const validateFulltextName = (def, directive) => {
-  let name = directive.arguments.find(argument => argument.name.value == 'name')
+  const name = directive.arguments.find(argument => argument.name.value == 'name')
   return name
     ? validateFulltextArgumentName(def, directive, name)
     : List([
@@ -445,12 +445,12 @@ const validateFulltextArgumentName = (def, directive, argument) => {
 }
 
 const fulltextDirectiveName = directive => {
-  let arg = directive.arguments.find(argument => argument.name.value == 'name')
+  const arg = directive.arguments.find(argument => argument.name.value == 'name')
   return arg ? arg.value.value : 'Other'
 }
 
 const validateFulltextLanguage = (def, directive) => {
-  let language = directive.arguments.find(argument => argument.name.value == 'language')
+  const language = directive.arguments.find(argument => argument.name.value == 'language')
   return language
     ? validateFulltextArgumentLanguage(def, directive, language)
     : List([
@@ -464,7 +464,7 @@ const validateFulltextLanguage = (def, directive) => {
 }
 
 const validateFulltextArgumentLanguage = (def, directive, argument) => {
-  let languages = [
+  const languages = [
     'simple',
     'da',
     'nl',
@@ -508,7 +508,7 @@ const validateFulltextArgumentLanguage = (def, directive, argument) => {
 }
 
 const validateFulltextAlgorithm = (def, directive) => {
-  let algorithm = directive.arguments.find(argument => argument.name.value == 'algorithm')
+  const algorithm = directive.arguments.find(argument => argument.name.value == 'algorithm')
   return algorithm
     ? validateFulltextArgumentAlgorithm(def, directive, algorithm)
     : List([
@@ -546,7 +546,7 @@ const validateFulltextArgumentAlgorithm = (def, directive, argument) => {
 }
 
 const validateFulltextInclude = (def, directive) => {
-  let include = directive.arguments.find(argument => argument.name.value == 'include')
+  const include = directive.arguments.find(argument => argument.name.value == 'include')
   if (include) {
     if (include.value.kind != 'ListValue') {
       return List([
@@ -693,7 +693,7 @@ const validateFulltextArgumentIncludeArgumentFieldsObject = (def, directive, fie
 const importDirectiveTypeValidators = {
   StringValue: (_def, _directive, _type) => List(),
   ObjectValue: (def, directive, type) => {
-    let errors = List()
+    const errors = List()
     if (type.fields.length != 2) {
       return errors.push(
         immutable.fromJS({
@@ -817,7 +817,7 @@ const validateImportDirectiveFields = (def, directive) => {
 }
 
 const validateImportDirectiveTypes = (def, directive) => {
-  let types = directive.arguments.find(argument => argument.name.value == 'types')
+  const types = directive.arguments.find(argument => argument.name.value == 'types')
   return types
     ? validateImportDirectiveArgumentTypes(def, directive, types)
     : List([
@@ -830,7 +830,7 @@ const validateImportDirectiveTypes = (def, directive) => {
 }
 
 const validateImportDirectiveFrom = (def, directive) => {
-  let from = directive.arguments.find(argument => argument.name.value == 'from')
+  const from = directive.arguments.find(argument => argument.name.value == 'from')
   return from
     ? validateImportDirectiveArgumentFrom(def, directive, from)
     : List([
@@ -939,8 +939,8 @@ const validateNamingCollisions = (local, imported) =>
   validateNamingCollisionsInTypes(local.concat(imported))
 
 const validateSchema = filename => {
-  let doc = loadSchema(filename)
-  let schema = parseSchema(doc)
+  const doc = loadSchema(filename)
+  const schema = parseSchema(doc)
   return List.of(
     ...validateTypeDefinitions(schema.definitions),
     ...validateNamingCollisions(

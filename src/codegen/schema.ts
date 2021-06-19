@@ -49,8 +49,8 @@ module.exports = class SchemaCodeGenerator {
   }
 
   _generateEntityType(def) {
-    let name = def.getIn(['name', 'value'])
-    let klass = tsCodegen.klass(name, { export: true, extends: 'Entity' })
+    const name = def.getIn(['name', 'value'])
+    const klass = tsCodegen.klass(name, { export: true, extends: 'Entity' })
 
     // Generate and add a constructor
     klass.addMethod(this._generateConstructor(name))
@@ -118,19 +118,19 @@ module.exports = class SchemaCodeGenerator {
   }
 
   _generateEntityFieldGetter(entityDef, fieldDef) {
-    let name = fieldDef.getIn(['name', 'value'])
-    let gqlType = fieldDef.get('type')
-    let fieldValueType = this._valueTypeFromGraphQl(gqlType)
-    let returnType = this._typeFromGraphQl(gqlType)
+    const name = fieldDef.getIn(['name', 'value'])
+    const gqlType = fieldDef.get('type')
+    const fieldValueType = this._valueTypeFromGraphQl(gqlType)
+    const returnType = this._typeFromGraphQl(gqlType)
 
-    let getNonNullable = `return ${typesCodegen.valueToAsc('value', fieldValueType)}`
-    let getNullable = `if (value === null || value.kind == ValueKind.NULL) {
+    const getNonNullable = `return ${typesCodegen.valueToAsc('value', fieldValueType)}`
+    const getNullable = `if (value === null || value.kind == ValueKind.NULL) {
                           return null
                         } else {
                           ${getNonNullable}
                         }`
 
-    let isNullable = returnType instanceof tsCodegen.NullableType
+    const isNullable = returnType instanceof tsCodegen.NullableType
     return tsCodegen.method(
       `get ${name}`,
       [],
@@ -143,17 +143,17 @@ module.exports = class SchemaCodeGenerator {
   }
 
   _generateEntityFieldSetter(entityDef, fieldDef) {
-    let name = fieldDef.getIn(['name', 'value'])
-    let gqlType = fieldDef.get('type')
-    let fieldValueType = this._valueTypeFromGraphQl(gqlType)
-    let paramType = this._typeFromGraphQl(gqlType)
-    let isNullable = paramType instanceof tsCodegen.NullableType
-    let paramTypeString = isNullable ? paramType.inner.toString() : paramType.toString()
+    const name = fieldDef.getIn(['name', 'value'])
+    const gqlType = fieldDef.get('type')
+    const fieldValueType = this._valueTypeFromGraphQl(gqlType)
+    const paramType = this._typeFromGraphQl(gqlType)
+    const isNullable = paramType instanceof tsCodegen.NullableType
+    const paramTypeString = isNullable ? paramType.inner.toString() : paramType.toString()
 
-    let setNonNullable = `
+    const setNonNullable = `
       this.set('${name}', ${typesCodegen.valueFromAsc(`value`, fieldValueType)})
     `
-    let setNullable = `
+    const setNullable = `
       if (value === null) {
         this.unset('${name}')
       } else {
@@ -184,11 +184,11 @@ module.exports = class SchemaCodeGenerator {
     if (gqlType.get('kind') === 'NonNullType') {
       return this._typeFromGraphQl(gqlType.get('type'), false)
     } else if (gqlType.get('kind') === 'ListType') {
-      let type = tsCodegen.arrayType(this._typeFromGraphQl(gqlType.get('type')))
+      const type = tsCodegen.arrayType(this._typeFromGraphQl(gqlType.get('type')))
       return nullable ? tsCodegen.nullableType(type) : type
     } else {
       // NamedType
-      let type = tsCodegen.namedType(
+      const type = tsCodegen.namedType(
         typesCodegen.ascTypeForValue(gqlType.getIn(['name', 'value'])),
       )
       // In AssemblyScript, primitives cannot be nullable.

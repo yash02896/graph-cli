@@ -26,7 +26,7 @@ const toYAML = x =>
  * Looks up the type of a field in a GraphQL object type.
  */
 const getFieldType = (type, fieldName) => {
-  let fieldDef = type
+  const fieldDef = type
     .get('fields')
     .find(field => field.getIn(['name', 'value']) === fieldName)
 
@@ -178,8 +178,8 @@ const validators = immutable.fromJS({
 })
 
 const validateValue = (value, ctx) => {
-  let kind = ctx.getIn(['type', 'kind'])
-  let validator = validators.get(kind)
+  const kind = ctx.getIn(['type', 'kind'])
+  const validator = validators.get(kind)
 
   if (validator !== undefined) {
     // If the type is nullable, accept undefined and null; if the nullable
@@ -201,7 +201,7 @@ const validateValue = (value, ctx) => {
 }
 
 const validateDataSourceNetworks = value => {
-  let networks = [...value.dataSources, ...(value.templates || [])]
+  const networks = [...value.dataSources, ...(value.templates || [])]
     .filter(dataSource => dataSource.kind === 'ethereum/contract')
     .reduce(
       (networks, dataSource) =>
@@ -234,7 +234,7 @@ Recommendation: Make all data sources and templates use the same network name.`,
 
 const validateManifest = (value, type, schema, { resolveFile }) => {
   // Validate manifest using the GraphQL schema that defines its structure
-  let errors =
+  const errors =
     value !== null && value !== undefined
       ? validateValue(
           immutable.fromJS(value),

@@ -16,8 +16,8 @@ module.exports = class Schema {
   }
 
   static load(filename) {
-    let document = fs.readFileSync(filename, 'utf-8')
-    let ast = graphql.parse(document)
+    const document = fs.readFileSync(filename, 'utf-8')
+    const ast = graphql.parse(document)
     return new Schema(filename, document, immutable.fromJS(ast))
   }
 }

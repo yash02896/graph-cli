@@ -16,7 +16,7 @@ const applyMigrations = async options =>
       await MIGRATIONS.reduce(async (previousPromise, migration) => {
         await previousPromise
 
-        let skipHint = await migration.predicate(options)
+        const skipHint = await migration.predicate(options)
         if (typeof skipHint !== 'string' && skipHint) {
           step(spinner, 'Apply migration:', migration.name)
           await migration.apply(options)

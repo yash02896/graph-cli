@@ -27,21 +27,16 @@ module.exports = {
   description: 'Deploys the subgraph to a Graph node',
   run: async toolbox => {
     // Obtain tools
-    let { filesystem, print } = toolbox
+    const { filesystem, print } = toolbox
 
     // Parse CLI parameters
+    const { g, h, i, o, skipMigrations, w } = toolbox.parameters.options
     let {
       accessToken,
-      g,
-      h,
-      i,
       help,
       ipfs,
       node,
-      o,
       outputDir,
-      skipMigrations,
-      w,
       watch,
     } = toolbox.parameters.options
 
@@ -110,7 +105,7 @@ module.exports = {
       return
     }
 
-    let compiler = createCompiler(manifest, {
+    const compiler = createCompiler(manifest, {
       ipfs,
       outputDir,
       outputFormat: 'wasm',
@@ -123,9 +118,9 @@ module.exports = {
       return
     }
 
-    let hostedService = node.match(/thegraph.com/)
-    let requestUrl = new URL(node)
-    let client = createJsonRpcClient(requestUrl)
+    const hostedService = node.match(/thegraph.com/)
+    const requestUrl = new URL(node)
+    const client = createJsonRpcClient(requestUrl)
 
     // Exit with an error code if the client couldn't be created
     if (!client) {
@@ -139,8 +134,8 @@ module.exports = {
       client.options.headers = { Authorization: 'Bearer ' + accessToken }
     }
 
-    let deploySubgraph = async ipfsHash => {
-      let spinner = print.spin(`Deploying to Graph node ${requestUrl}`)
+    const deploySubgraph = async ipfsHash => {
+      const spinner = print.spin(`Deploying to Graph node ${requestUrl}`)
       //       `Failed to deploy to Graph node ${requestUrl}`,
       client.request(
         'subgraph_deploy',
@@ -210,7 +205,7 @@ $ graph create --node ${node} ${subgraphName}`)
         }
       })
     } else {
-      let result = await compiler.compile()
+      const result = await compiler.compile()
       if (result === undefined || result === false) {
         // Compilation failed, not deploying.
         process.exitCode = 1

@@ -15,7 +15,7 @@ describe('ABI code generation', () => {
     tempdir = fs.mkdtempSync('abi-codegen')
 
     try {
-      let filename = path.join(tempdir, 'ABI.json')
+      const filename = path.join(tempdir, 'ABI.json')
       fs.writeFileSync(
         filename,
         JSON.stringify([
@@ -167,7 +167,7 @@ describe('ABI code generation', () => {
         'utf-8',
       )
       abi = ABI.load('Contract', filename)
-      let codegen = new AbiCodeGenerator(abi)
+      const codegen = new AbiCodeGenerator(abi)
       generatedTypes = codegen.generateTypes()
     } finally {
       fs.removeSync(tempdir)
@@ -197,24 +197,24 @@ describe('ABI code generation', () => {
     })
 
     test('Has methods', () => {
-      let contract = generatedTypes.find(type => type.name === 'Contract')
+      const contract = generatedTypes.find(type => type.name === 'Contract')
       expect(contract.methods).toBeInstanceOf(Array)
     })
 
     test('Has `bind` method', () => {
-      let contract = generatedTypes.find(type => type.name === 'Contract')
+      const contract = generatedTypes.find(type => type.name === 'Contract')
       expect(contract.methods.find(method => method.name === 'bind')).toBeDefined()
     })
 
     test('Has methods for all callable functions', () => {
-      let contract = generatedTypes.find(type => type.name === 'Contract')
+      const contract = generatedTypes.find(type => type.name === 'Contract')
       expect(contract.methods.map(method => method.name)).toContain('getProposal')
     })
   })
 
   describe('Methods for callable functions', () => {
     test('Have correct parameters', () => {
-      let contract = generatedTypes.find(type => type.name === 'Contract')
+      const contract = generatedTypes.find(type => type.name === 'Contract')
       expect(contract.methods.map(method => [method.name, method.params])).toEqual([
         ['bind', immutable.List([ts.param('address', 'Address')])],
         ['read', immutable.List()],
@@ -245,7 +245,7 @@ describe('ABI code generation', () => {
     })
 
     test('Have correct return types', () => {
-      let contract = generatedTypes.find(type => type.name === 'Contract')
+      const contract = generatedTypes.find(type => type.name === 'Contract')
       expect(contract.methods.map(method => [method.name, method.returnType])).toEqual([
         ['bind', ts.namedType('Contract')],
         ['read', ts.namedType('Bytes')],
@@ -269,7 +269,7 @@ describe('ABI code generation', () => {
 
   describe('Tuples', () => {
     test('Tuple types exist for function parameters', () => {
-      let tupleType = generatedTypes.find(
+      const tupleType = generatedTypes.find(
         type => type.name === 'Contract__getProposalInputParam1Struct',
       )
 
@@ -299,7 +299,7 @@ describe('ABI code generation', () => {
     })
 
     test('Tuple types exist for function return values', () => {
-      let tupleType = generatedTypes.find(
+      const tupleType = generatedTypes.find(
         type => type.name === 'Contract__getProposalResultValue0Struct',
       )
 
@@ -322,8 +322,8 @@ describe('ABI code generation', () => {
     })
 
     test('Function bodies are generated correctly for tuple arrays', () => {
-      let contract = generatedTypes.find(type => type.name === 'Contract')
-      let getter = contract.methods.find(method => method.name === 'getProposals')
+      const contract = generatedTypes.find(type => type.name === 'Contract')
+      const getter = contract.methods.find(method => method.name === 'getProposals')
 
       expect(getter.body).not.toContain('toTupleArray<undefined>')
       expect(getter.body).toContain(
