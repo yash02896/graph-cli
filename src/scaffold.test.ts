@@ -1,7 +1,6 @@
 import ABI from './abi'
 import immutable from 'immutable'
 import {
-  generateEventFieldAssignments,
   generateManifest,
   generateMapping,
   generateSchema,

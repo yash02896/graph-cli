@@ -1,14 +1,11 @@
 import fs from 'fs-extra'
 import path from 'path'
 import prettier from 'prettier'
-import pkginfo from 'pkginfo'
-const pkginfoWithModule = pkginfo(module)
 
 import { getSubgraphBasename } from './command-helpers/subgraph'
 import { step } from './command-helpers/spinner'
 import { ascTypeForEthereum, valueTypeForAsc } from './codegen/types'
 import ABI from './abi'
-import AbiCodeGenerator from './codegen/abi'
 import util from './codegen/util'
 
 const abiEvents = abi =>
@@ -147,28 +144,6 @@ const generateSchema = ({ abi, indexEvents }) => {
 }
 
 // Mapping
-
-const generateTupleFieldAssignments = ({ keyPath, index, component }) => {
-  let name = component.name || `value${index}`
-  keyPath = [...keyPath, name]
-
-  let flatName = keyPath.join('_')
-  let nestedName = keyPath.join('.')
-
-  return component.type === 'tuple'
-    ? component.components.reduce(
-        (acc, subComponent, subIndex) =>
-          acc.concat(
-            generateTupleFieldAssignments({
-              keyPath,
-              index: subIndex,
-              component: subComponent,
-            }),
-          ),
-        [],
-      )
-    : [`entity.${flatName} = event.params.${nestedName}`]
-}
 
 const generateFieldAssignment = path =>
   `entity.${path.join('_')} = event.params.${path.join('.')}`

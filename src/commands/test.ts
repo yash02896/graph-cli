@@ -3,7 +3,6 @@ import compose from 'docker-compose'
 import http from 'http'
 import net from 'net'
 import tmp from 'tmp'
-import Docker from 'dockerode'
 import path from 'path'
 import stripAnsi from 'strip-ansi'
 import { spawn } from 'child_process'
@@ -82,9 +81,6 @@ module.exports = {
 
     let testCommand = params[0]
 
-    // Create Docker client
-    let docker = new Docker()
-
     // Obtain the Docker Compose file for services that the tests run against
     composeFile =
       composeFile ||
@@ -130,7 +126,7 @@ module.exports = {
         skipWaitForEthereum,
         skipWaitForIpfs,
         skipWaitForPostgres,
-	timeout,
+        timeout,
       })
     } catch (e) {
       await stopTestEnvironment(tempdir)
@@ -257,7 +253,7 @@ const configureTestEnvironment = async (toolbox, tempdir, composeFile, nodeImage
     `Configure test environment`,
     `Failed to configure test environment`,
     `Warnings configuring test environment`,
-    async spinner => {
+    async _spinner => {
       // Temporary compose file
       let tempComposeFile = path.join(tempdir, 'compose', 'docker-compose.yml')
 
@@ -330,7 +326,7 @@ const waitForTestEnvironment = async ({
           async () =>
             new Promise((resolve, reject) => {
               http
-                .get('http://localhost:15001/api/v0/version', response => {
+                .get('http://localhost:15001/api/v0/version', _response => {
                   resolve()
                 })
                 .on('error', e => {
@@ -350,7 +346,7 @@ const waitForTestEnvironment = async ({
           async () =>
             new Promise((resolve, reject) => {
               http
-                .get('http://localhost:18545', response => {
+                .get('http://localhost:18545', _response => {
                   resolve()
                 })
                 .on('error', e => {
@@ -390,7 +386,7 @@ const stopTestEnvironment = async tempdir =>
     `Stop test environment`,
     `Failed to stop test environment`,
     `Warnings stopping test environment`,
-    async spinner => {
+    async _spinner => {
       // Our containers do not respond quickly to the SIGTERM which `down` tries before timing out
       // and killing them, so speed things up by sending a SIGKILL right away.
       try {
@@ -458,7 +454,7 @@ const waitForGraphNode = async ( timeout ) =>
     `Wait for Graph node`,
     `Failed to wait for Graph node`,
     `Warnings waiting for Graph node`,
-    async spinner => {
+    async _spinner => {
       await waitFor(
         timeout,
         async () =>
@@ -476,7 +472,7 @@ const stopGraphNode = async nodeProcess =>
     `Stop Graph node`,
     `Failed to stop Graph node`,
     `Warnings stopping Graph node`,
-    async spinner => {
+    async _spinner => {
       nodeProcess.kill(9)
     },
   )
@@ -508,8 +504,8 @@ const runTests = async testCommand =>
     `Run tests`,
     `Failed to run tests`,
     `Warnings running tests`,
-    async spinner =>
-      new Promise((resolve, reject) => {
+    async _spinner =>
+      new Promise((resolve, _reject) => {
         let output = []
         let testProcess = spawn(`${testCommand}`, { shell: true })
         testProcess.stdout.on('data', data => output.push(Buffer.from(data)))

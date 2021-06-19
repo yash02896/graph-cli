@@ -1,6 +1,5 @@
 import path from 'path'
 import fs from 'fs-extra'
-import yaml from 'js-yaml'
 
 const getGraphTsVersion = sourceDir => {
   let pkgJsonFile = path.join(

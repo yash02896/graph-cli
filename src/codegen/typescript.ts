@@ -1,5 +1,3 @@
-import { Map } from 'immutable'
-
 class Param {
   constructor(name, type) {
     this.name = name
@@ -8,17 +6,6 @@ class Param {
 
   toString() {
     return `${this.name}: ${this.type.toString()}`
-  }
-}
-
-class ReturnType {
-  constructor(name, type) {
-    this.name = name
-    this.type = type
-  }
-
-  toString() {
-    return `${this.type.toString()}`
   }
 }
 
@@ -163,16 +150,6 @@ class UnionType {
   }
 }
 
-class MaybeType {
-  constructor(type) {
-    this.type = type
-  }
-
-  toString() {
-    return `?${this.type.name}`
-  }
-}
-
 class ModuleImports {
   constructor(nameOrNames, module) {
     this.nameOrNames = nameOrNames
@@ -183,39 +160,6 @@ class ModuleImports {
     return `import { ${
       typeof this.nameOrNames === 'string' ? this.nameOrNames : this.nameOrNames.join(',')
     } } from "${this.module}"`
-  }
-}
-
-class ModuleImport {
-  constructor(alias, module) {
-    this.alias = alias
-    this.module = module
-  }
-
-  toString() {
-    return `import * as ${this.alias} from "${this.module}"`
-  }
-}
-
-class ValueToCoercion {
-  constructor(expr, type) {
-    this.expr = expr
-    this.type = type
-  }
-
-  toString() {
-    return `${this.expr}.${valueToTypeFunction(this.type)}()`
-  }
-}
-
-class ValueFromCoercion {
-  constructor(expr, type) {
-    this.expr = expr
-    this.type = type
-  }
-
-  toString() {
-    return `Value.${valueFromTypeFunction(this.type)}(${this.expr})`
   }
 }
 

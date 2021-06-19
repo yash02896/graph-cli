@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { validateNodeUrl, normalizeNodeUrl } from '../command-helpers/node'
+import { validateNodeUrl } from '../command-helpers/node'
 import { saveAccessToken } from '../command-helpers/auth'
 
 const HELP = `
@@ -16,7 +16,7 @@ module.exports = {
   description: 'Sets the access token to use when deploying to a Graph node',
   run: async toolbox => {
     // Obtain tools
-    let { filesystem, print, system } = toolbox
+    let { print } = toolbox
 
     // Read CLI parameters
     let { h, help } = toolbox.parameters.options

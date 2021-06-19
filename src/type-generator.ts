@@ -2,8 +2,6 @@ import fs from 'fs-extra'
 import immutable from 'immutable'
 import path from 'path'
 import prettier from 'prettier'
-import graphql from 'graphql/language'
-import chalk from 'chalk'
 import toolbox from 'gluegun/toolbox'
 
 import ABI from './abi'
@@ -73,7 +71,7 @@ module.exports = class TypeGenerator {
         `Load subgraph from ${manifestPath}`,
         `Failed to load subgraph from ${manifestPath}`,
         `Warnings while loading subgraph from ${manifestPath}`,
-        async spinner => {
+        async _spinner => {
           return this.options.subgraph
             ? this.options.subgraph
             : Subgraph.load(this.options.subgraphManifest)
@@ -155,7 +153,7 @@ module.exports = class TypeGenerator {
       `Warnings while generating types for contract ABIs`,
       async spinner => {
         return await Promise.all(
-          abis.map(async (abi, name) => await this._generateTypesForABI(abi, spinner)),
+          abis.map(async (abi, _name) => await this._generateTypesForABI(abi, spinner)),
         )
       },
     )
@@ -237,7 +235,7 @@ module.exports = class TypeGenerator {
       `Load GraphQL schema from ${this.displayPath(absolutePath)}`,
       `Failed to load GraphQL schema from ${this.displayPath(absolutePath)}`,
       `Warnings while loading GraphQL schema from ${this.displayPath(absolutePath)}`,
-      async spinner => {
+      async _spinner => {
         let maybeRelativePath = subgraph.getIn(['schema', 'file'])
         let absolutePath = path.resolve(this.sourceDir, maybeRelativePath)
         return Schema.load(absolutePath)
@@ -345,7 +343,7 @@ module.exports = class TypeGenerator {
       async spinner => {
         return await Promise.all(
           abis.map(
-            async (abi, name) =>
+            async (abi, _name) =>
               await this._generateTypesForDataSourceTemplateABI(abi, spinner),
           ),
         )

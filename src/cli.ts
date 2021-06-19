@@ -1,6 +1,4 @@
 import path from 'path'
-import { exec } from 'child_process'
-import which from 'which'
 import { build, system } from 'gluegun'
 
 const run = async argv => {

@@ -6,8 +6,6 @@ import { createCompiler } from '../command-helpers/compiler'
 import { fixParameters } from '../command-helpers/gluegun'
 import { createJsonRpcClient } from '../command-helpers/jsonrpc'
 import { validateNodeUrl } from '../command-helpers/node'
-import { withSpinner } from '../command-helpers/spinner'
-import { validateSubgraphName } from '../command-helpers/subgraph'
 
 const HELP = `
 ${chalk.bold('graph deploy')} [options] ${chalk.bold('<subgraph-name>')} ${chalk.bold(
@@ -29,7 +27,7 @@ module.exports = {
   description: 'Deploys the subgraph to a Graph node',
   run: async toolbox => {
     // Obtain tools
-    let { filesystem, print, system } = toolbox
+    let { filesystem, print } = toolbox
 
     // Parse CLI parameters
     let {

@@ -70,7 +70,7 @@ module.exports = class SchemaCodeGenerator {
     return klass
   }
 
-  _generateConstructor(entityName) {
+  _generateConstructor(_entityName) {
     return tsCodegen.method(
       'constructor',
       [tsCodegen.param('id', tsCodegen.namedType('string'))],
