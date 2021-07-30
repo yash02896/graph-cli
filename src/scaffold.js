@@ -25,16 +25,16 @@ const generatePackageJson = ({ subgraphName, node }) =>
       name: getSubgraphBasename(subgraphName),
       license: 'UNLICENSED',
       scripts: {
-        codegen: 'graph codegen',
-        build: 'graph build',
+        codegen: 'graph-staging codegen',
+        build: 'graph-staging build',
         deploy:
-          `graph deploy ` +
+          `graph-staging deploy ` +
           `--node ${node} ` +
           subgraphName,
-        'create-local': `graph create --node http://localhost:8020/ ${subgraphName}`,
-        'remove-local': `graph remove --node http://localhost:8020/ ${subgraphName}`,
+        'create-local': `graph-staging create --node http://localhost:8020/ ${subgraphName}`,
+        'remove-local': `graph-staging remove --node http://localhost:8020/ ${subgraphName}`,
         'deploy-local':
-          `graph deploy ` +
+          `graph-staging deploy ` +
           `--node http://localhost:8020/ ` +
           `--ipfs http://localhost:5001 ` +
           subgraphName,

@@ -1,6 +1,6 @@
 {
   "name": "@graphprotocol/graph-cli-staging",
-  "version": "0.21.1-staging4",
+  "version": "0.21.1-staging5",
   "description": "CLI for building for and deploying to The Graph",
   "dependencies": {
     "assemblyscript": "git+https://github.com/AssemblyScript/assemblyscript.git#v0.6",
