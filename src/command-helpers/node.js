@@ -1,8 +1,8 @@
 const URL = require('url').URL
 const { print } = require('gluegun/toolbox')
 
-const SUBGRAPH_STUDIO_URL = 'https://api.studio.thegraph.com/deploy/'
-const HOSTED_SERVICE_URL = 'https://api.thegraph.com/deploy/'
+const SUBGRAPH_STUDIO_URL = 'https://api.studio.staging.thegraph.com/deploy/'
+const HOSTED_SERVICE_URL = 'https://api.staging.thegraph.com/deploy/'
 
 const validateNodeUrl = node => new URL(node)
 
