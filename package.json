@@ -1,6 +1,6 @@
 {
   "name": "@graphprotocol/graph-cli-staging",
-  "version": "0.21.1-staging2",
+  "version": "0.21.1-staging3",
   "description": "CLI for building for and deploying to The Graph",
   "dependencies": {
     "assemblyscript": "git+https://github.com/AssemblyScript/assemblyscript.git#v0.6",
@@ -25,7 +25,7 @@
     "yaml": "^1.5.1"
   },
   "bin": {
-    "graph": "bin/graph-staging"
+    "graph-staging": "bin/graph"
   },
   "devDependencies": {
     "eslint": "^6.0.1",
