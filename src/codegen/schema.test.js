@@ -190,7 +190,11 @@ describe('Schema code generator', () => {
             returnType: new NamedType('string'),
             body: `
               let value = this.get('name')
-              return value!.toString()
+              if (!value) {
+                return ''
+              } else {
+                return value.toString()
+              }
             `,
           },
           {
@@ -224,7 +228,11 @@ describe('Schema code generator', () => {
             returnType: new NamedType('i32'),
             body: `
               let value = this.get('count')
-              return value!.toI32()
+              if (!value) {
+                return 0
+              } else {
+                return value.toI32()
+              }
             `,
           },
           {
@@ -327,7 +335,11 @@ describe('Schema code generator', () => {
             returnType: new NamedType('BigInt'),
             body: `
               let value = this.get('amount')
-              return value!.toBigInt()
+              if (!value) {
+                return BigInt.zero()
+              } else {
+                return value.toBigInt()
+              }
             `,
           },
           {
@@ -344,7 +356,11 @@ describe('Schema code generator', () => {
             returnType: new NamedType('string'),
             body: `
               let value = this.get('account')
-              return value!.toString()
+              if (!value) {
+                return ''
+              } else {
+                return value.toString()
+              }
             `,
           },
           {
