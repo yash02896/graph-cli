@@ -1,8 +1,9 @@
 const immutable = require('immutable')
 
 const TYPE_CONVERSIONS = require('./conversions')
+const DEFAULTS = require('./defaults')
 
-// Conversion utilities
+// Utilities
 
 const conversionsForTypeSystems = (fromTypeSystem, toTypeSystem) => {
   let conversions = TYPE_CONVERSIONS.getIn([fromTypeSystem, toTypeSystem])
@@ -12,6 +13,18 @@ const conversionsForTypeSystems = (fromTypeSystem, toTypeSystem) => {
     )
   }
   return conversions
+}
+
+const defaultsForTypeSystem = typeSystem => {
+  const defaults = DEFAULTS.get(typeSystem)
+
+  if (defaults === undefined) {
+    throw new Error(
+      `Defaults for '${typeSystem}' type system don't exist`,
+    )
+  }
+
+  return defaults 
 }
 
 const objectifyConversion = (fromTypeSystem, toTypeSystem, conversion) => {
@@ -66,25 +79,50 @@ const findConversionToType = (fromTypeSystem, toTypeSystem, toType) => {
   return objectifyConversion(fromTypeSystem, toTypeSystem, conversion)
 }
 
-const findInitializationForType = (fromTypeSystem, toTypeSystem, ascType) => {
-  const conversions = conversionsForTypeSystems(fromTypeSystem, toTypeSystem)
+const findDefaultForType = (
+  typeSystem,
+  ascType,
+) => {
+  const defaults = defaultsForTypeSystem(typeSystem)
+  // [
+  //   ['string', 'stuff', () => converion, 'zerovalue']
+  // ]
 
-  const conversion = conversions.find(conversion =>
-    typeof conversion.get(0) === 'string'
-      ? conversion.get(0) === ascType
-      : ascType.match(conversion.get(0)),
+  const defaultForType = defaults.find(type =>
+    typeof type.get(0) === 'string'
+      ? type.get(0) === ascType
+      : ascType.match(type.get(0)),
   )
+  // ['string', 'stuff', () => conversion, 'zerovalue']
 
-  if (conversion === undefined) {
+  if (defaultForType === undefined) {
     throw new Error(
-      `Conversion from '${fromTypeSystem}' to '${toTypeSystem}' for ` +
-        `target type '${ascType}' is not supported`,
+      `Default value for AssemblyScript type '${ascType}' is not supported`,
     )
   }
 
-  const conversionObj = objectifyConversion(fromTypeSystem, toTypeSystem, conversion)
+  return defaultForType.get(1)
 
-  return conversionObj.get('convert')(conversion.get(3))
+  // const conversionObj = objectifyConversion(fromTypeSystem, toTypeSystem, conversion)
+  // {
+  //   from: {
+  //     typeSystem: 'AssemblyScript',
+  //     type: 'string',
+  //   },
+  //   to: {
+  //     typeSystem: 'Value',
+  //     type: 'stuff',
+  //   },
+  //   convert: () => conversion,
+  // }
+  //
+  // console.log('conversionObj', conversionObj.toJS())
+  // console.log('conversionObj.convert', conversionObj.get('convert'))
+  // console.log('conversion', conversion.toJS())
+  //
+  // return conversionObj.get('convert')(conversion.get(3))
+  // convert: () => conversion
+  // 'zerovalue'
 }
 
 // High-level type system API
@@ -120,8 +158,8 @@ const valueToAsc = (code, valueType) =>
 const valueFromAsc = (code, valueType) =>
   findConversionToType('AssemblyScript', 'Value', valueType).get('convert')(code)
 
-const initializedValueFromAsc = ascType =>
-  findInitializationForType('AssemblyScript', 'Value', ascType)
+const ascDefaultForType = ascType =>
+  findDefaultForType('AssemblyScript', ascType)
 
 module.exports = {
   // protocol <-> AssemblyScript
@@ -138,5 +176,7 @@ module.exports = {
   valueTypeForAsc,
   valueToAsc,
   valueFromAsc,
-  initializedValueFromAsc,
+
+  // AssemblyScript defaults
+  ascDefaultForType,
 }

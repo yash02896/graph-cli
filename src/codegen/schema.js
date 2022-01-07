@@ -125,9 +125,26 @@ module.exports = class SchemaCodeGenerator {
     let gqlType = fieldDef.get('type')
     let fieldValueType = this._valueTypeFromGraphQl(gqlType)
     let returnType = this._typeFromGraphQl(gqlType)
-    let isNullable = returnType instanceof tsCodegen.NullableType
+    let fieldTypeString = returnType instanceof tsCodegen.NullableType
+      ? returnType.inner.toString()
+      : returnType.toString()
+    if (name === 'age' || name === 'count') {
+      console.log(name)
+      console.log('gqlType', gqlType.toJS())
+      console.log('fieldValueType', fieldValueType)
+      console.log('fieldTypeString', fieldTypeString)
+      console.log('returnType instanceof tsCodegen.NullableType', returnType instanceof tsCodegen.NullableType)
+      // console.log('isNullable', isNullable)
+      // console.log('isPrimitive', isPrimitive)
+      console.log('returnType', returnType)
+      console.log(name)
+    }
 
-    let getNonNullable = `return ${typesCodegen.valueToAsc('value!', fieldValueType)}`
+    let getNonNullable = `if (!value) {
+                            return ${typesCodegen.ascDefaultForType(fieldTypeString)}
+                          } else {
+                            return ${typesCodegen.valueToAsc('value', fieldValueType)}
+                          }`
     let getNullable = `if (!value || value.kind == ValueKind.NULL) {
                           return null
                         } else {
@@ -140,7 +157,13 @@ module.exports = class SchemaCodeGenerator {
       returnType,
       `
        let value = this.get('${name}')
-       ${isNullable ? getNullable : getNonNullable}
+       ${
+       // Look if it's nullable from the GraphQL type because:
+       // - _typeFromGraphQl considers primitives always non-nullable, for AssemblyScript reasons
+       // - `Int` getter can return `null`, however `Int!` must return `0` if nothing is in the store or in memory
+       gqlType.get('kind') === 'NonNullType'
+        ? getNonNullable
+        : getNullable}
       `,
     )
   }

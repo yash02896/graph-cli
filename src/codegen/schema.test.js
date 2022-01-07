@@ -148,7 +148,11 @@ describe('Schema code generator', () => {
             returnType: new NamedType('string'),
             body: `
               let value = this.get('id')
-              return value!.toString()
+              if (!value) {
+                return ''
+              } else {
+                return value.toString()
+              }
             `,
           },
           {
@@ -318,7 +322,11 @@ describe('Schema code generator', () => {
             returnType: new NamedType('string'),
             body: `
               let value = this.get('id')
-              return value!.toString()
+              if (!value) {
+                return ''
+              } else {
+                return value.toString()
+              }
             `,
           },
           {
